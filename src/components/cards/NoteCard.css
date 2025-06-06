@@ -1,0 +1,35 @@
+/* Give the Tiptap editor a minimum height and remove the default outline */
+.ProseMirror {
+  min-height: 80px;
+  outline: none;
+}
+
+/* Remove the default paragraph margins for a cleaner look inside the card */
+.ProseMirror p {
+  margin: 0;
+}
+
+/* Custom styles for heading levels to make them visually distinct */
+.ProseMirror h1 {
+  font-size: 1.5em; /* 24px */
+  font-weight: 600;
+  line-height: 1.1;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.ProseMirror h2 {
+  font-size: 1.25em; /* 20px */
+  font-weight: 600;
+  line-height: 1.1;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.ProseMirror h3 {
+  font-size: 1.1em; /* ~17.5px */
+  font-weight: 600;
+  line-height: 1.1;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+} 

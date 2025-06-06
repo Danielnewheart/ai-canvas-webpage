@@ -1,28 +1,22 @@
+"use client";
+
+import Canvas from '@/components/canvas/Canvas';
+import ChatPanel from '@/components/ui/ChatPanel';
+import { ReactFlowProvider } from 'reactflow';
+
 export default function CanvasPage() {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       {/* Canvas Area */}
-      <div className="flex-1 bg-white border-r border-gray-200">
-        <div className="flex items-center justify-center h-full">
-          <p className="text-2xl text-gray-400">Canvas Area</p>
-        </div>
+      <div className="flex-1 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+        <ReactFlowProvider>
+          <Canvas />
+        </ReactFlowProvider>
       </div>
 
       {/* AI Chat Panel */}
-      <div className="w-96 bg-gray-50 p-4">
-        <div className="flex flex-col h-full">
-          <div className="flex-1 mb-4">
-            <p className="text-xl font-semibold text-gray-800">AI Chat</p>
-            {/* Chat messages will go here */}
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Ask a follow-up..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
-        </div>
+      <div className="w-96 bg-gray-50 dark:bg-gray-800">
+        <ChatPanel />
       </div>
     </div>
   );

@@ -31,21 +31,22 @@
   - [x] 1.3 Create the main canvas view (`app/canvas/page.tsx`) containing placeholders for the canvas and AI chat panel (FR1.3).
   - [x] 1.4 Implement the client-side routing logic to transition from the initial chat UI to the canvas view after the first message is sent (FR1.2).
 
-- [ ] 2.0 **Core Canvas Functionality**
-  - [ ] 2.1 Integrate a canvas library (e.g., `react-flow` or `konva`) into the `Canvas.tsx` component.
-  - [ ] 2.2 Implement background panning and zooming functionality for the canvas (FR4.1).
-  - [ ] 2.3 Implement the ability to add a new `NoteCard.tsx` to the canvas (e.g., on double-click) (FR4.2).
-  - [ ] 2.4 Integrate a Markdown editor (e.g., `react-markdown`) into `NoteCard.tsx` to support rich-text editing (FR4.3).
-  - [ ] 2.5 Implement dragging, resizing, and deleting for all card components on the canvas (FR4.4).
-  - [ ] 2.6 Implement a "duplicate" action for cards (FR4.5).
-  - [ ] 2.7 Implement the drawing of simple, straight connection lines between cards (FR4.6).
+- [x] 2.0 **Core Canvas Functionality**
+  - [x] 2.1 Integrate a canvas library (e.g., `react-flow` or `konva`) into the `Canvas.tsx` component.
+  - [x] 2.2 Implement background panning and zooming functionality for the canvas (FR4.1).
+  - [x] 2.3 Implement the ability to add a new `NoteCard.tsx` to the canvas (e.g., on double-click) (FR4.2).
+  - [x] 2.4 Integrate a Markdown editor (e.g., `react-markdown`) into `NoteCard.tsx` to support rich-text editing (FR4.3).
+  - [x] 2.5 Implement dragging, resizing, and deleting for all card components on the canvas (FR4.4).
+  - [x] 2.6 Implement a "duplicate" action for cards (FR4.5).
+  - [x] 2.7 Implement the drawing of simple, straight connection lines between cards (FR4.6).
 
-- [ ] 3.0 **AI Chat Panel & Backend Integration**
-  - [ ] 3.1 Build the UI for the `ChatPanel.tsx`, including a message history area and an input form (FR2.1, FR2.2).
-  - [ ] 3.2 Create the backend API endpoint (`app/api/chat/route.ts`) to proxy requests to a third-party LLM API.
-  - [ ] 3.3 Integrate the LLM API that has web search capabilities.
-  - [ ] 3.4 Connect the `ChatPanel.tsx` to the backend endpoint to send user queries and receive AI responses.
-  - [ ] 3.5 Ensure AI responses with web sources are parsed and displayed with clickable links/footnotes (FR2.4).
+- [x] 3.0 **AI Chat Panel & Backend Integration**
+  - [x] 3.1 Build the UI for the `ChatPanel.tsx`, including a message history area and an input form (FR2.1, FR2.2).
+  - [x] 3.2 Create the backend API endpoint (`app/api/chat/route.ts`) to proxy requests to a OpenAI API followed by https://platform.openai.com/docs/api-reference/chat.
+  - [x] 3.3 Integrate the OpenAI API that has web search capabilities followed by https://platform.openai.com/docs/guides/tools-web-search?api-mode=chat.
+  - [x] 3.4 Connect the `ChatPanel.tsx` to the backend endpoint to send user queries and receive AI responses.
+  - [x] 3.5 Ensure AI responses with web sources are parsed and displayed with clickable links/footnotes (FR2.4).
+  - [x] 3.6 Add search status indicator to show when AI is searching the web (UX enhancement).
 
 - [ ] 4.0 **Web-Card & In-App Preview**
   - [ ] 4.1 Build the `WebPreviewPanel.tsx` component, likely using an `<iframe>` to display external web pages (FR5.1, FR5.2).
