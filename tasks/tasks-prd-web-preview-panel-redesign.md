@@ -14,13 +14,13 @@
 
 ## Tasks
 
-- [ ] 1.0 Backend: Set Up Headless Browser Service & API
-  - [ ] 1.1 Install a headless browser library (e.g., `puppeteer`) and add it to `package.json`.
-  - [ ] 1.2 Create the new API endpoint file at `src/app/api/browse/route.ts`.
-  - [ ] 1.3 In `lib/browser-service.ts`, implement the core logic to launch a browser instance, navigate to a given URL, and return the full page HTML.
-  - [ ] 1.4 In the API route, call the browser service and return the rendered HTML to the client.
-  - [ ] 1.5 Implement robust error handling for cases where a page fails to load in the headless browser.
-  - [ ] 1.6 Create basic unit tests for the browser service.
+- [x] 1.0 Backend: Set Up Headless Browser Service & API
+  - [x] 1.1 Install a headless browser library (e.g., `puppeteer`) and add it to `package.json`.
+  - [x] 1.2 Create the new API endpoint file at `src/app/api/browse/route.ts`.
+  - [x] 1.3 In `lib/browser-service.ts`, implement the core logic to launch a browser instance, navigate to a given URL, and return the full page HTML.
+  - [x] 1.4 In the API route, call the browser service and return the rendered HTML to the client.
+  - [x] 1.5 Implement robust error handling for cases where a page fails to load in the headless browser.
+  - [x] 1.6 Create basic unit tests for the browser service.
 
 - [ ] 2.0 Frontend: Redesign the WebPreviewPanel Component UI
   - [ ] 2.1 Overhaul `src/components/ui/WebPreviewPanel.tsx`, removing the `iframe` and its related state. Keep "Add to canvas" button and function.
