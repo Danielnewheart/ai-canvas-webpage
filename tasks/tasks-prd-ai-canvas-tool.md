@@ -57,5 +57,5 @@
 - [ ] 5.0 **Connecting the Core Loop**
   - [x] 5.1 Implement a context menu triggered by "@" that allows searching and selecting cards on the canvas based on keywords.
   - [x] 5.2 Modify the AI chat submission logic to parse "@" mentions in the message, search for matching cards, and include their content as context in the API request to the backend (FR2.6).
-  - [ ] 5.3 Update the `/api/chat` backend endpoint to accept and process the additional context from canvas cards.
+  - [x] 5.3 Update the `/api/chat` backend endpoint to accept and process the additional context from canvas cards.
   - [ ] 5.4 Conduct an end-to-end test of the primary user flow: Ask -> Get cited response -> Open source in preview -> Add source to canvas -> Reference card with "@" -> Ask a new question with card context.
