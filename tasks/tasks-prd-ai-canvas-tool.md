@@ -4,15 +4,14 @@
 - `components/canvas/Canvas.test.tsx` - Unit tests for the `Canvas.tsx` component.
 - `components/cards/NoteCard.tsx` - Component for rendering and editing a standard note-card with Markdown support.
 - `components/cards/NoteCard.test.tsx` - Unit tests for the `NoteCard.tsx` component.
-- `components/cards/WebCard.tsx` - Component for rendering a web-card with title, description, and favicon.
-- `components/cards/WebCard.test.tsx` - Unit tests for the `WebCard.tsx` component.
+- `components/cards/WebCard.tsx` - Component for rendering a web-card with title, description, favicon, and click functionality.
 - `components/ui/ChatPanel.tsx` - The AI chat interface, handling message display and user input.
 - `components/ui/ChatPanel.test.tsx` - Unit tests for the `ChatPanel.tsx` component.
 - `components/ui/WebPreviewPanel.tsx` - The panel for displaying external web pages from citations or web-cards.
 - `app/page.tsx` - The initial entry point of the application, displaying the simple chat interface.
 - `app/canvas/page.tsx` - The main page that hosts the canvas and chat panel UI.
 - `app/api/chat/route.ts` - The backend API route for handling requests to the LLM, including web search.
-- `app/api/metadata/route.ts` - The backend API route to fetch URL metadata (title, description) for web-cards.
+- `app/api/metadata/route.ts` - The backend API route to fetch URL metadata (title, description, favicon, image) for web-cards.
 - `lib/hooks/useCanvasState.ts` - A custom hook to manage the state of the canvas (e.g., cards, connections, zoom level).
 - `lib/hooks/useChat.ts` - A custom hook for managing the chat state and communication with the `/api/chat` endpoint.
 
@@ -50,8 +49,8 @@
 - [ ] 4.0 **Web-Card & In-App Preview**
   - [x] 4.1 Build the `WebPreviewPanel.tsx` component, likely using an `<iframe>` to display external web pages (FR5.1, FR5.2).
   - [x] 4.2 Implement the logic to open citation links from the chat panel in the `WebPreviewPanel.tsx` (FR2.5).
-  - [ ] 4.3 Create the backend API endpoint (`app/api/metadata/route.ts`) to fetch metadata from a URL (FR3.2).
-  - [ ] 4.4 Implement the functionality to create a `WebCard.tsx` on the canvas when a user pastes a link (FR3.1). This will call the metadata endpoint.
+  - [x] 4.3 Create the backend API endpoint (`app/api/metadata/route.ts`) to fetch metadata from a URL (FR3.2).
+  - [x] 4.4 Implement the functionality to create a `WebCard.tsx` on the canvas when a user pastes a link (FR3.1). This will call the metadata endpoint.
   - [ ] 4.5 Add an "Add to Canvas" button in the `WebPreviewPanel.tsx` that creates a corresponding `WebCard.tsx` on the main canvas (FR3.3).
   - [ ] 4.6 Implement the logic for a click on a `WebCard.tsx` to open its link in the `WebPreviewPanel.tsx` (FR3.4).
 

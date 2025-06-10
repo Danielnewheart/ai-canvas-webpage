@@ -18,6 +18,7 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 import NoteCard from '../cards/NoteCard';
+import WebCard from '../cards/WebCard';
 import ContextMenu from '../ui/ContextMenu';
 
 const initialNodes: Node[] = [
@@ -26,12 +27,17 @@ const initialNodes: Node[] = [
 
 const nodeTypes = {
   noteCard: NoteCard,
+  webCard: WebCard,
 };
 
 let id = 2;
 const getId = () => `${id++}`;
 
-export default function Canvas() {
+interface CanvasProps {
+  onWebCardClick?: (url: string, title?: string) => void;
+}
+
+export default function Canvas({ onWebCardClick }: CanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
@@ -111,6 +117,78 @@ export default function Canvas() {
     },
     [nodes, setNodes]
   );
+
+  // URL detection utility
+  const isValidUrl = (string: string): boolean => {
+    try {
+      const url = new URL(string.trim());
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
+
+  // Fetch URL metadata and create WebCard
+  const createWebCard = useCallback(
+    async (url: string, position: { x: number; y: number }) => {
+      try {
+        const response = await fetch(`/api/metadata?url=${encodeURIComponent(url)}`);
+        const metadata = await response.json();
+        
+        if (!response.ok) {
+          console.error('Failed to fetch metadata:', metadata.error);
+          return;
+        }
+
+        const newWebCard = {
+          id: getId(),
+          type: 'webCard',
+          position,
+          data: {
+            ...metadata,
+            onWebCardClick,
+          },
+          style: { width: 280, height: 160 },
+        };
+
+        setNodes((nds) => nds.concat(newWebCard));
+      } catch (error) {
+        console.error('Error creating web card:', error);
+      }
+    },
+    [setNodes, onWebCardClick]
+  );
+
+  // Handle paste events for URL detection
+  const handlePaste = useCallback(
+    (event: ClipboardEvent) => {
+      const pastedText = event.clipboardData?.getData('text') || '';
+      
+      if (isValidUrl(pastedText)) {
+        event.preventDefault();
+        
+        // Get mouse position or use center of viewport
+        const canvas = document.querySelector('.react-flow__renderer');
+        const rect = canvas?.getBoundingClientRect();
+        
+        const position = screenToFlowPosition({
+          x: rect ? rect.left + rect.width / 2 : window.innerWidth / 2,
+          y: rect ? rect.top + rect.height / 2 : window.innerHeight / 2,
+        });
+        
+        createWebCard(pastedText, position);
+      }
+    },
+    [screenToFlowPosition, createWebCard]
+  );
+
+  // Add paste event listener
+  React.useEffect(() => {
+    document.addEventListener('paste', handlePaste);
+    return () => {
+      document.removeEventListener('paste', handlePaste);
+    };
+  }, [handlePaste]);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>

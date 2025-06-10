@@ -33,7 +33,7 @@ export default function CanvasPage() {
       {/* Canvas Area */}
       <div className="flex-1 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
         <ReactFlowProvider>
-          <Canvas />
+          <Canvas onWebCardClick={handleCitationClick} />
         </ReactFlowProvider>
       </div>
 
