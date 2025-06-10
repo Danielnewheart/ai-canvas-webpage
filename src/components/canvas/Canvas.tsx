@@ -36,9 +36,18 @@ const getId = () => `${id++}`;
 interface CanvasProps {
   onWebCardClick?: (url: string, title?: string) => void;
   onCanvasReady?: (addWebCardFunction: (url: string) => Promise<void>) => void;
+  onCardsChange?: (cards: CanvasCard[]) => void;
 }
 
-export default function Canvas({ onWebCardClick, onCanvasReady }: CanvasProps) {
+export interface CanvasCard {
+  id: string;
+  type: 'noteCard' | 'webCard';
+  title: string;
+  content: string;
+  url?: string;
+}
+
+export default function Canvas({ onWebCardClick, onCanvasReady, onCardsChange }: CanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
@@ -169,6 +178,44 @@ export default function Canvas({ onWebCardClick, onCanvasReady }: CanvasProps) {
     },
     [createWebCard]
   );
+
+  // Extract card data for @ mention system
+  const extractCardsData = useCallback((nodes: Node[]): CanvasCard[] => {
+    return nodes.map(node => {
+      if (node.type === 'noteCard') {
+        // Extract text content from HTML
+        const textContent = node.data.label?.replace(/<[^>]*>/g, '') || '';
+        return {
+          id: node.id,
+          type: 'noteCard',
+          title: textContent.substring(0, 50) + (textContent.length > 50 ? '...' : ''),
+          content: textContent,
+        };
+      } else if (node.type === 'webCard') {
+        return {
+          id: node.id,
+          type: 'webCard',
+          title: node.data.title || node.data.siteName || 'Web Card',
+          content: node.data.description || '',
+          url: node.data.url,
+        };
+      }
+      return {
+        id: node.id,
+        type: 'noteCard',
+        title: 'Unknown Card',
+        content: '',
+      };
+    });
+  }, []);
+
+  // Notify parent of card changes
+  React.useEffect(() => {
+    if (onCardsChange) {
+      const cardsData = extractCardsData(nodes);
+      onCardsChange(cardsData);
+    }
+  }, [nodes, onCardsChange, extractCardsData]);
 
   // Expose the addWebCardFromPreview function to parent
   React.useEffect(() => {

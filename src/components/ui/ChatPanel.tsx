@@ -1,11 +1,22 @@
 "use client";
 
+import { useState, useRef } from 'react';
 import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ExternalLink, Search, Loader2 } from 'lucide-react';
+
+interface CanvasCard {
+  id: string;
+  type: 'noteCard' | 'webCard';
+  title: string;
+  content: string;
+  url?: string;
+}
+
 interface ChatPanelProps {
   onCitationClick?: (url: string, title?: string) => void;
+  canvasCards?: CanvasCard[];
 }
 
 interface Citation {
@@ -14,8 +25,15 @@ interface Citation {
   index: number;
 }
 
-export default function ChatPanel({ onCitationClick }: ChatPanelProps) {
+export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPanelProps) {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [mentionPosition, setMentionPosition] = useState(0);
+  const [filteredCards, setFilteredCards] = useState<CanvasCard[]>([]);
+  const [selectedMentionIndex, setSelectedMentionIndex] = useState(0);
+  const [confirmedMentions, setConfirmedMentions] = useState<Set<string>>(new Set());
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Custom renderer for markdown links to handle citations
   const createCustomRenderers = (citations: Citation[]) => ({
@@ -78,6 +96,217 @@ export default function ChatPanel({ onCitationClick }: ChatPanelProps) {
     }
 
     return citations;
+  };
+
+  // Handle @ mention functionality
+  const handleInputChangeWithMentions = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const cursorPosition = e.target.selectionStart || 0;
+    const textBeforeCursor = e.target.value.substring(0, cursorPosition);
+    const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+    
+    if (lastAtIndex !== -1) {
+      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+      
+      // Check if this looks like a mention (no spaces after @)
+      if (!textAfterAt.includes(' ') && textAfterAt.length >= 0) {
+        setMentionQuery(textAfterAt);
+        setMentionPosition(lastAtIndex);
+        setShowMentions(true);
+        
+        // Filter cards based on query
+        const filtered = canvasCards.filter(card => 
+          card.title.toLowerCase().includes(textAfterAt.toLowerCase()) ||
+          card.content.toLowerCase().includes(textAfterAt.toLowerCase())
+        );
+        setFilteredCards(filtered);
+        setSelectedMentionIndex(0); // Reset selection to first item
+      } else {
+        setShowMentions(false);
+      }
+    } else {
+      setShowMentions(false);
+    }
+    
+    handleInputChange(e);
+  };
+
+  // Handle mention selection
+  const handleMentionSelect = (card: CanvasCard) => {
+    console.log('Selecting card:', card.title); // Debug
+    
+    const beforeMention = input.substring(0, mentionPosition);
+    const afterMention = input.substring(mentionPosition + 1 + mentionQuery.length);
+    
+    // Use only the card title (which is already truncated appropriately)
+    const mentionText = `@${card.title}`;
+    const newValue = `${beforeMention}${mentionText} ${afterMention}`;
+    
+    console.log('New value will be:', newValue); // Debug
+    
+    // Add this mention to confirmed mentions
+    setConfirmedMentions(prev => {
+      const newSet = new Set([...prev, card.title]);
+      console.log('Confirmed mentions:', Array.from(newSet)); // Debug
+      return newSet;
+    });
+    
+    // Update the input through the proper useChat mechanism
+    const syntheticEvent = {
+      target: { value: newValue }
+    } as React.ChangeEvent<HTMLTextAreaElement>;
+    
+    handleInputChange(syntheticEvent);
+    
+    // Set cursor position after the mention
+    const newCursorPos = beforeMention.length + mentionText.length + 1; // +1 for space
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    }, 0);
+    
+    setShowMentions(false);
+  };
+
+  // Parse input to identify mentions and regular text
+  const parseInputForMentions = (text: string) => {
+    const parts: Array<{ type: 'text' | 'mention', content: string }> = [];
+    
+    console.log('Parsing text:', text); // Debug
+    console.log('Confirmed mentions:', Array.from(confirmedMentions)); // Debug
+
+    let currentIndex = 0;
+    
+    // Sort confirmed mentions by length (longest first) to avoid partial matches
+    const sortedMentions = Array.from(confirmedMentions).sort((a, b) => b.length - a.length);
+    
+    while (currentIndex < text.length) {
+      let foundMention = false;
+      
+      // Look for @ symbol
+      if (text[currentIndex] === '@') {
+        // Check each confirmed mention to see if it matches at this position
+        for (const confirmedMention of sortedMentions) {
+          const mentionPattern = `@${confirmedMention}`;
+          if (text.substring(currentIndex, currentIndex + mentionPattern.length) === mentionPattern) {
+            // Add any text before this mention
+            if (currentIndex > 0 && parts.length === 0) {
+              parts.push({
+                type: 'text',
+                content: text.substring(0, currentIndex)
+              });
+            }
+            
+            console.log('Found confirmed mention:', confirmedMention); // Debug
+            parts.push({
+              type: 'mention',
+              content: confirmedMention
+            });
+            
+            currentIndex += mentionPattern.length;
+            foundMention = true;
+            break;
+          }
+        }
+      }
+      
+      if (!foundMention) {
+        // Find the next mention or end of string
+        let nextMentionIndex = text.length;
+        for (const confirmedMention of sortedMentions) {
+          const mentionPattern = `@${confirmedMention}`;
+          const index = text.indexOf(mentionPattern, currentIndex + 1);
+          if (index !== -1 && index < nextMentionIndex) {
+            nextMentionIndex = index;
+          }
+        }
+        
+        // Add text from current position to next mention (or end)
+        const textContent = text.substring(currentIndex, nextMentionIndex);
+        if (textContent) {
+          parts.push({
+            type: 'text',
+            content: textContent
+          });
+        }
+        
+        currentIndex = nextMentionIndex;
+      }
+    }
+    
+    console.log('Parsed parts:', parts); // Debug
+    return parts;
+  };
+
+  // Handle all keyboard interactions
+  const handleKeyDownWithMentionDeletion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // First, handle mention dropdown navigation if dropdown is open
+    if (showMentions && filteredCards.length > 0) {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          setSelectedMentionIndex(prev => 
+            prev < filteredCards.length - 1 ? prev + 1 : 0
+          );
+          return;
+        case 'ArrowUp':
+          e.preventDefault();
+          setSelectedMentionIndex(prev => 
+            prev > 0 ? prev - 1 : filteredCards.length - 1
+          );
+          return;
+        case 'Enter':
+          e.preventDefault();
+          handleMentionSelect(filteredCards[selectedMentionIndex]);
+          return;
+        case 'Escape':
+          e.preventDefault();
+          setShowMentions(false);
+          return;
+      }
+    }
+
+    // Handle backspace for atomic mention deletion
+    if (e.key === 'Backspace' && inputRef.current) {
+      const cursorPosition = inputRef.current.selectionStart || 0;
+      const textBeforeCursor = input.substring(0, cursorPosition);
+      
+      // Check if cursor is right after a confirmed mention
+      for (const confirmedMention of confirmedMentions) {
+        const mentionPattern = `@${confirmedMention}`;
+        if (textBeforeCursor.endsWith(mentionPattern)) {
+          e.preventDefault();
+          
+          // Delete the entire mention
+          const beforeMention = textBeforeCursor.substring(0, textBeforeCursor.length - mentionPattern.length);
+          const afterCursor = input.substring(cursorPosition);
+          const newValue = beforeMention + afterCursor;
+          
+          // Remove from confirmed mentions
+          setConfirmedMentions(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(confirmedMention);
+            return newSet;
+          });
+          
+          // Update input through proper mechanism
+          const syntheticEvent = {
+            target: { value: newValue }
+          } as React.ChangeEvent<HTMLTextAreaElement>;
+          
+          handleInputChange(syntheticEvent);
+          
+          // Set cursor position
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.setSelectionRange(beforeMention.length, beforeMention.length);
+            }
+          }, 0);
+          
+          return;
+        }
+      }
+    }
   };
 
   return (
@@ -145,19 +374,134 @@ export default function ChatPanel({ onCitationClick }: ChatPanelProps) {
         )}
       </div>
       <form onSubmit={handleSubmit} className="p-4 border-t border-gray-700">
-        <div className="flex items-center">
-          <input
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Type a message..."
-            className="flex-1 p-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="ml-2 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Send
-          </button>
+        <div className="relative">
+          {/* Mentions dropdown */}
+          {showMentions && filteredCards.length > 0 && (
+            <div className="absolute bottom-full left-0 right-0 mb-2 bg-gray-700 border border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto z-10">
+              {filteredCards.map((card, index) => (
+                <button
+                  key={card.id}
+                  type="button"
+                  onClick={() => handleMentionSelect(card)}
+                  className={`w-full text-left p-3 border-b border-gray-600 last:border-b-0 transition-colors ${
+                    index === selectedMentionIndex 
+                      ? 'bg-blue-600 hover:bg-blue-700' 
+                      : 'hover:bg-gray-600'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs bg-blue-600 px-2 py-1 rounded text-white">
+                      {card.type === 'noteCard' ? 'Note' : 'Web'}
+                    </span>
+                    <span className="font-medium text-white truncate">{card.title}</span>
+                  </div>
+                  {card.content && (
+                    <p className="text-sm text-gray-400 mt-1 truncate">{card.content}</p>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+          
+          <div className="flex items-center">
+            <div className="flex-1 relative">
+              {/* Textarea field with auto-resize */}
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={handleInputChangeWithMentions}
+                onKeyDown={handleKeyDownWithMentionDeletion}
+                placeholder="Type a message... Use @ to mention cards"
+                className="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-transparent caret-white resize-none font-mono"
+                style={{
+                  minHeight: '40px',
+                  maxHeight: '144px', // 6 lines * 24px line height
+                  lineHeight: '24px',
+                  fontSize: '14px',
+                  letterSpacing: '0px',
+                  wordSpacing: '0px'
+                }}
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = '40px'; // Reset height
+                  const scrollHeight = Math.min(target.scrollHeight, 144); // Max 6 lines
+                  target.style.height = scrollHeight + 'px';
+                  if (target.scrollHeight > 144) {
+                    target.style.overflowY = 'auto';
+                  } else {
+                    target.style.overflowY = 'hidden';
+                  }
+                }}
+                onScroll={(e) => {
+                  // Sync overlay scroll with textarea scroll
+                  const target = e.target as HTMLTextAreaElement;
+                  const overlay = target.nextElementSibling as HTMLElement;
+                  if (overlay) {
+                    overlay.scrollTop = target.scrollTop;
+                  }
+                }}
+              />
+              
+              {/* Text and mention chips overlay */}
+              <div 
+                className="absolute inset-0 p-2 pointer-events-none overflow-auto font-mono"
+                style={{
+                  lineHeight: '24px',
+                  fontSize: '14px',
+                  letterSpacing: '0px',
+                  wordSpacing: '0px',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-all',
+                  overflowWrap: 'break-word',
+                  maxHeight: '144px'
+                }}
+              >
+                {parseInputForMentions(input).map((part, index) => {
+                  if (part.type === 'mention') {
+                    // Show the full mention text with blue background (same length as original)
+                    return (
+                      <span 
+                        key={`mention-${index}`}
+                        className="bg-blue-600 text-white px-1 rounded"
+                        style={{ 
+                          lineHeight: '24px',
+                          fontSize: '14px',
+                          letterSpacing: '0px',
+                          wordSpacing: '0px'
+                        }}
+                      >
+                        @{part.content}
+                      </span>
+                    );
+                  } else {
+                    // Show regular text as white, preserve exact spacing
+                    return (
+                      <span 
+                        key={`text-${index}`}
+                        className="text-white"
+                        style={{ 
+                          whiteSpace: 'pre-wrap',
+                          lineHeight: '24px',
+                          fontSize: '14px',
+                          letterSpacing: '0px',
+                          wordSpacing: '0px'
+                        }}
+                      >
+                        {part.content}
+                      </span>
+                    );
+                  }
+                })}
+              </div>
+            </div>
+            
+            <button
+              type="submit"
+              className="ml-2 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 self-end"
+            >
+              Send
+            </button>
+          </div>
         </div>
       </form>
     </div>
