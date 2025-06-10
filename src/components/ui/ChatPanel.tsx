@@ -5,7 +5,11 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ExternalLink, Search, Loader2 } from 'lucide-react';
 
-export default function ChatPanel() {
+interface ChatPanelProps {
+  onCitationClick?: (url: string, title?: string) => void;
+}
+
+export default function ChatPanel({ onCitationClick }: ChatPanelProps) {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
 
   return (
@@ -36,15 +40,13 @@ export default function ChatPanel() {
                     if (part.type === 'source') {
                       return (
                         <div key={index} className="mt-1">
-                          <a
-                            href={part.source.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-blue-300 hover:text-blue-200 text-sm underline"
+                          <button
+                            onClick={() => onCitationClick?.(part.source.url, part.source.title)}
+                            className="inline-flex items-center gap-1 text-blue-300 hover:text-blue-200 text-sm underline cursor-pointer"
                           >
                             <ExternalLink size={12} />
                             {part.source.title || new URL(part.source.url).hostname}
-                          </a>
+                          </button>
                         </div>
                       );
                     }

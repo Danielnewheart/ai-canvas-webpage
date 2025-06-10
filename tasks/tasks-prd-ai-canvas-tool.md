@@ -49,7 +49,7 @@
 
 - [ ] 4.0 **Web-Card & In-App Preview**
   - [x] 4.1 Build the `WebPreviewPanel.tsx` component, likely using an `<iframe>` to display external web pages (FR5.1, FR5.2).
-  - [ ] 4.2 Implement the logic to open citation links from the chat panel in the `WebPreviewPanel.tsx` (FR2.5).
+  - [x] 4.2 Implement the logic to open citation links from the chat panel in the `WebPreviewPanel.tsx` (FR2.5).
   - [ ] 4.3 Create the backend API endpoint (`app/api/metadata/route.ts`) to fetch metadata from a URL (FR3.2).
   - [ ] 4.4 Implement the functionality to create a `WebCard.tsx` on the canvas when a user pastes a link (FR3.1). This will call the metadata endpoint.
   - [ ] 4.5 Add an "Add to Canvas" button in the `WebPreviewPanel.tsx` that creates a corresponding `WebCard.tsx` on the main canvas (FR3.3).
