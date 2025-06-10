@@ -35,9 +35,10 @@ const getId = () => `${id++}`;
 
 interface CanvasProps {
   onWebCardClick?: (url: string, title?: string) => void;
+  onCanvasReady?: (addWebCardFunction: (url: string) => Promise<void>) => void;
 }
 
-export default function Canvas({ onWebCardClick }: CanvasProps) {
+export default function Canvas({ onWebCardClick, onCanvasReady }: CanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
@@ -158,6 +159,23 @@ export default function Canvas({ onWebCardClick }: CanvasProps) {
     },
     [setNodes, onWebCardClick]
   );
+
+  // Function to add WebCard from preview panel
+  const addWebCardFromPreview = useCallback(
+    async (url: string) => {
+      // Position the new card in a visible area of the canvas
+      const position = { x: 100, y: 100 };
+      await createWebCard(url, position);
+    },
+    [createWebCard]
+  );
+
+  // Expose the addWebCardFromPreview function to parent
+  React.useEffect(() => {
+    if (onCanvasReady) {
+      onCanvasReady(addWebCardFromPreview);
+    }
+  }, [onCanvasReady]); // Only depend on onCanvasReady to avoid infinite loop
 
   // Handle paste events for URL detection
   const handlePaste = useCallback(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Canvas from '@/components/canvas/Canvas';
 import ChatPanel from '@/components/ui/ChatPanel';
 import WebPreviewPanel from '@/components/ui/WebPreviewPanel';
@@ -10,6 +10,7 @@ export default function CanvasPage() {
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [previewTitle, setPreviewTitle] = useState<string>('');
   const [showPreview, setShowPreview] = useState(false);
+  const [addWebCardToCanvas, setAddWebCardToCanvas] = useState<((url: string) => Promise<void>) | null>(null);
 
   const handleCitationClick = (url: string, title?: string) => {
     setPreviewUrl(url);
@@ -23,17 +24,31 @@ export default function CanvasPage() {
     setPreviewTitle('');
   };
 
-  const handleAddToCanvas = (url: string, title?: string) => {
-    // TODO: Implement add to canvas functionality in future task
-    console.log('Add to canvas:', { url, title });
+  const handleAddToCanvas = async (url: string) => {
+    if (addWebCardToCanvas) {
+      try {
+        await addWebCardToCanvas(url);
+        // Optionally close the preview after adding to canvas
+        handleClosePreview();
+      } catch (error) {
+        console.error('Failed to add web card to canvas:', error);
+      }
+    }
   };
+
+  const handleCanvasReady = useCallback((addWebCardFunction: (url: string) => Promise<void>) => {
+    setAddWebCardToCanvas(() => addWebCardFunction);
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       {/* Canvas Area */}
       <div className="flex-1 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
         <ReactFlowProvider>
-          <Canvas onWebCardClick={handleCitationClick} />
+          <Canvas 
+            onWebCardClick={handleCitationClick} 
+            onCanvasReady={handleCanvasReady}
+          />
         </ReactFlowProvider>
       </div>
 

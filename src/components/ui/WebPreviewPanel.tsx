@@ -7,7 +7,7 @@ interface WebPreviewPanelProps {
   url?: string;
   title?: string;
   onClose?: () => void;
-  onAddToCanvas?: (url: string, title?: string) => void;
+  onAddToCanvas?: (url: string) => void;
 }
 
 export default function WebPreviewPanel({ 
@@ -38,7 +38,7 @@ export default function WebPreviewPanel({
 
   const handleAddToCanvas = () => {
     if (url && onAddToCanvas) {
-      onAddToCanvas(url, title);
+      onAddToCanvas(url);
     }
   };
 
