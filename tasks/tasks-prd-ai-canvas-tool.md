@@ -46,13 +46,13 @@
   - [x] 3.5 Ensure AI responses with web sources are parsed and displayed with clickable links/footnotes (FR2.4).
   - [x] 3.6 Add search status indicator to show when AI is searching the web (UX enhancement).
 
-- [ ] 4.0 **Web-Card & In-App Preview**
+- [x] 4.0 **Web-Card & In-App Preview**
   - [x] 4.1 Build the `WebPreviewPanel.tsx` component, likely using an `<iframe>` to display external web pages (FR5.1, FR5.2).
   - [x] 4.2 Implement the logic to open citation links from the chat panel in the `WebPreviewPanel.tsx` (FR2.5).
   - [x] 4.3 Create the backend API endpoint (`app/api/metadata/route.ts`) to fetch metadata from a URL (FR3.2).
   - [x] 4.4 Implement the functionality to create a `WebCard.tsx` on the canvas when a user pastes a link (FR3.1). This will call the metadata endpoint.
   - [x] 4.5 Add an "Add to Canvas" button in the `WebPreviewPanel.tsx` that creates a corresponding `WebCard.tsx` on the main canvas (FR3.3).
-  - [ ] 4.6 Implement the logic for a click on a `WebCard.tsx` to open its link in the `WebPreviewPanel.tsx` (FR3.4).
+  - [x] 4.6 Implement the logic for a click on a `WebCard.tsx` to open its link in the `WebPreviewPanel.tsx` (FR3.4).
 
 - [ ] 5.0 **Connecting the Core Loop**
   - [ ] 5.1 Implement a selection mechanism for cards on the canvas (e.g., single-click to select, multi-select with Shift key).
