@@ -26,7 +26,16 @@ interface Citation {
 }
 
 export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPanelProps) {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const [originalUserMessage, setOriginalUserMessage] = useState<string>('');
+  const [lastMessageWithContext, setLastMessageWithContext] = useState<string>('');
+  
+  const { messages, input, handleInputChange, handleSubmit, append, isLoading } = useChat({
+    onFinish: () => {
+      // Clear confirmed mentions after AI response
+      setConfirmedMentions(new Set());
+      // Don't clear originalUserMessage immediately as we need it for display
+    },
+  });
   const [showMentions, setShowMentions] = useState(false);
   const [mentionQuery, setMentionQuery] = useState('');
   const [mentionPosition, setMentionPosition] = useState(0);
@@ -238,8 +247,75 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
     return parts;
   };
 
-  // Handle all keyboard interactions
-  const handleKeyDownWithMentionDeletion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+     // Extract mentioned cards and their content for context
+   const extractMentionedCards = (text: string): CanvasCard[] => {
+     const parts = parseInputForMentions(text);
+     const mentionedCards: CanvasCard[] = [];
+     
+     for (const part of parts) {
+       if (part.type === 'mention') {
+         const card = canvasCards.find(c => c.title === part.content);
+         if (card) {
+           mentionedCards.push(card);
+         }
+       }
+     }
+     
+     return mentionedCards;
+   };
+
+   // Custom submit handler that includes canvas context
+   const handleSubmitWithContext = async (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+     
+     if (!input.trim()) return;
+     
+     // Extract mentioned cards
+     const mentionedCards = extractMentionedCards(input);
+     
+     if (mentionedCards.length > 0) {
+       // Store the original input to show in UI
+       setOriginalUserMessage(input);
+       
+       // Create enriched message with canvas context
+       const contextString = mentionedCards.map(card => {
+         let contextInfo = `[Card: ${card.title}]`;
+         if (card.type === 'webCard' && card.url) {
+           contextInfo += `\nURL: ${card.url}`;
+         }
+         if (card.content) {
+           contextInfo += `\nContent: ${card.content}`;
+         }
+         return contextInfo;
+       }).join('\n\n');
+       
+       const enrichedMessage = `${input}\n\n---Canvas Context---\n${contextString}`;
+       
+       console.log('Sending enriched message:', enrichedMessage); // Debug
+       
+       // Track this message for display purposes
+       setLastMessageWithContext(enrichedMessage);
+       
+       // Use append to send the enriched message directly
+       await append({
+         role: 'user',
+         content: enrichedMessage,
+       });
+       
+       // Clear the input
+       handleInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLTextAreaElement>);
+       
+     } else {
+       // No mentions, clear any previous context tracking
+       setOriginalUserMessage('');
+       setLastMessageWithContext('');
+       // Use normal submit
+       handleSubmit(e);
+     }
+   };
+
+   // Handle all keyboard interactions
+   const handleKeyDownWithMentionDeletion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // First, handle mention dropdown navigation if dropdown is open
     if (showMentions && filteredCards.length > 0) {
       switch (e.key) {
@@ -315,6 +391,10 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
         {messages.map((m) => {
           const citations = m.role === 'assistant' ? extractCitations(m.content) : [];
           const customRenderers = createCustomRenderers(citations);
+          
+          // For user messages, check if this message has context and we should show the original
+          const shouldShowOriginal = m.role === 'user' && m.content === lastMessageWithContext && originalUserMessage;
+          const displayContent = shouldShowOriginal ? originalUserMessage : m.content;
 
           return (
             <div
@@ -327,12 +407,36 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
               
               {/* Display message content with custom renderers */}
               <div className="mt-1">
-                <ReactMarkdown 
-                  remarkPlugins={[remarkGfm]}
-                  components={customRenderers}
-                >
-                  {m.content}
-                </ReactMarkdown>
+                {shouldShowOriginal ? (
+                  // Render the original message with mention chips
+                  <div>
+                    {parseInputForMentions(originalUserMessage).map((part, partIndex) => {
+                      if (part.type === 'mention') {
+                        return (
+                          <span 
+                            key={`mention-${partIndex}`}
+                            className="bg-blue-500 text-white px-2 py-1 rounded mr-1"
+                          >
+                            @{part.content}
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span key={`text-${partIndex}`}>
+                            {part.content}
+                          </span>
+                        );
+                      }
+                    })}
+                  </div>
+                ) : (
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    components={customRenderers}
+                  >
+                    {displayContent}
+                  </ReactMarkdown>
+                )}
               </div>
 
               {/* Display citation references at the bottom */}
@@ -373,7 +477,7 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
           </div>
         )}
       </div>
-      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-700">
+              <form onSubmit={handleSubmitWithContext} className="p-4 border-t border-gray-700">
         <div className="relative">
           {/* Mentions dropdown */}
           {showMentions && filteredCards.length > 0 && (

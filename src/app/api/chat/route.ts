@@ -7,21 +7,26 @@ export const runtime = 'edge';
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
+    
+    // Debug: Log the received messages to see if context is included
+    console.log('Received messages:', JSON.stringify(messages, null, 2));
 
     // Add system message to improve response quality and ensure sources are provided
     const systemMessage = {
       role: 'system' as const,
-      content: `你是一個專業且樂於助人的 AI 助手。請遵循以下準則：
+      content: `You are a professional and helpful AI assistant. Please follow these guidelines:
 
-1. 提供詳細、有用且準確的回答
-2. 當使用網路搜尋功能時，務必在回答中明確引用和列出所有來源
-3. 用清晰的結構組織你的回答，使用標題、列表等格式
-4. 保持回答的完整性和實用性，不要過於簡短
-5. 當提供網路搜尋結果時，請包含：
-   - 來源的標題
-   - 來源的 URL
-   - 相關的摘要或引用
-6. 以友善、專業的語調回應`
+1. Provide detailed, useful, and accurate answers
+2. When using web search functionality, clearly cite and list all sources in your response
+3. Use clear structure to organize your answers, using headings, lists, etc.
+4. Keep answers complete and practical, not overly brief
+5. When a user message contains "---Canvas Context---" section, pay special attention to the canvas cards referenced there. Use the content from those cards to provide more contextual and relevant answers.
+6. The canvas context will contain card information in the format:
+   [Card: Title]
+   URL: (if applicable)
+   Content: (the actual content)
+7. Always prioritize and reference the canvas context when available
+8. Respond in a friendly, professional tone`
     };
 
     // Ensure messages include system prompt
