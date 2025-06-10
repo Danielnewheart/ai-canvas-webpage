@@ -9,7 +9,6 @@
 - `components/ui/ChatPanel.tsx` - The AI chat interface, handling message display and user input.
 - `components/ui/ChatPanel.test.tsx` - Unit tests for the `ChatPanel.tsx` component.
 - `components/ui/WebPreviewPanel.tsx` - The panel for displaying external web pages from citations or web-cards.
-- `components/ui/WebPreviewPanel.test.tsx` - Unit tests for the `WebPreviewPanel.tsx` component.
 - `app/page.tsx` - The initial entry point of the application, displaying the simple chat interface.
 - `app/canvas/page.tsx` - The main page that hosts the canvas and chat panel UI.
 - `app/api/chat/route.ts` - The backend API route for handling requests to the LLM, including web search.
@@ -49,7 +48,7 @@
   - [x] 3.6 Add search status indicator to show when AI is searching the web (UX enhancement).
 
 - [ ] 4.0 **Web-Card & In-App Preview**
-  - [ ] 4.1 Build the `WebPreviewPanel.tsx` component, likely using an `<iframe>` to display external web pages (FR5.1, FR5.2).
+  - [x] 4.1 Build the `WebPreviewPanel.tsx` component, likely using an `<iframe>` to display external web pages (FR5.1, FR5.2).
   - [ ] 4.2 Implement the logic to open citation links from the chat panel in the `WebPreviewPanel.tsx` (FR2.5).
   - [ ] 4.3 Create the backend API endpoint (`app/api/metadata/route.ts`) to fetch metadata from a URL (FR3.2).
   - [ ] 4.4 Implement the functionality to create a `WebCard.tsx` on the canvas when a user pastes a link (FR3.1). This will call the metadata endpoint.

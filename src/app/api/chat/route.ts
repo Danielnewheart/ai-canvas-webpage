@@ -17,8 +17,7 @@ export async function POST(req: Request) {
           searchContextSize: 'high',
         }),
       },
-      maxSteps: 10,
-      toolChoice: { type: 'tool', toolName: 'web_search_preview' },
+      maxSteps: 5,
     });
 
     return result.toDataStreamResponse({
