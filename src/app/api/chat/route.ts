@@ -1,23 +1,20 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 
-// IMPORTANT! Set the runtime to edge
-export const runtime = 'edge';
+// Remove edge runtime for now to fix deployment issues
+// export const runtime = 'edge';
 
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    
-    // Debug: Log the received messages to see if context is included
-    console.log('Received messages:', JSON.stringify(messages, null, 2));
 
     // Add system message to improve response quality and ensure sources are provided
     const systemMessage = {
       role: 'system' as const,
-      content: `You are a professional and helpful AI assistant. Please follow these guidelines:
+      content: `You are a professional and helpful AI assistant with web search capabilities. Please follow these guidelines:
 
-1. Provide detailed, useful, and accurate answers
-2. When using web search functionality, clearly cite and list all sources in your response
+1. For questions about current events, recent developments, or information that may have changed since your training data, actively search the web to provide up-to-date information
+2. Always provide detailed, accurate answers with proper citations and sources when you use web search
 3. Use clear structure to organize your answers, using headings, lists, etc.
 4. Keep answers complete and practical, not overly brief
 5. When a user message contains "---Canvas Context---" section, pay special attention to the canvas cards referenced there. Use the content from those cards to provide more contextual and relevant answers.
@@ -25,25 +22,25 @@ export async function POST(req: Request) {
    [Card: Title]
    URL: (if applicable)
    Content: (the actual content)
-7. Always prioritize and reference the canvas context when available
+7. Always prioritize and reference the canvas context when available, but also search for current information when needed
 8. Respond in a friendly, professional tone`
     };
+
+    // Debug: Log the received messages to see if context is included
+    console.log(
+      'systemMessage', systemMessage,
+      'Received messages:', JSON.stringify(messages, null, 2)
+    );
 
     // Ensure messages include system prompt
     const messagesWithSystem = [systemMessage, ...messages];
 
+    // Use the dedicated search model for consistent web search functionality
     const result = await streamText({
-      model: openai.responses('gpt-4o-mini'), // Use responses API with correct model
+      model: openai('gpt-4o-search-preview'), // Dedicated search model
       messages: messagesWithSystem,
-      temperature: 0.7, // Increased temperature for more natural responses
-      tools: {
-        web_search_preview: openai.tools.webSearchPreview({
-          searchContextSize: 'high',
-        }),
-      },
-      maxSteps: 5,
-      // Add additional configuration to encourage better responses
-      maxTokens: 2048, // Allow longer responses
+      temperature: 1,
+      maxTokens: 2048,
     });
 
     return result.toDataStreamResponse({

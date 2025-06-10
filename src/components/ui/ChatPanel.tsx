@@ -388,31 +388,31 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
   return (
     <div className="flex flex-col h-full bg-gray-800 text-white rounded-lg shadow-lg">
       <div className="flex-1 p-4 overflow-y-auto">
-        {messages.map((m) => {
-          const citations = m.role === 'assistant' ? extractCitations(m.content) : [];
-          const customRenderers = createCustomRenderers(citations);
+                 {messages.map((m) => {
+            const citations = m.role === 'assistant' ? extractCitations(m.content) : [];
+            const customRenderers = createCustomRenderers(citations);
           
           // For user messages, check if this message has context and we should show the original
           const shouldShowOriginal = m.role === 'user' && m.content === lastMessageWithContext && originalUserMessage;
           const displayContent = shouldShowOriginal ? originalUserMessage : m.content;
 
           return (
-            <div
-              key={m.id}
-              className={`p-2 my-2 rounded-lg ${
-                m.role === 'user' ? 'bg-blue-600 self-end' : 'bg-gray-700 self-start'
-              }`}
-            >
-              <strong>{m.role === 'user' ? 'User: ' : 'AI: '}</strong>
-              
+          <div
+            key={m.id}
+            className={`p-2 my-2 rounded-lg ${
+              m.role === 'user' ? 'bg-blue-600 self-end' : 'bg-gray-700 self-start'
+            }`}
+          >
+            <strong>{m.role === 'user' ? 'User: ' : 'AI: '}</strong>
+            
               {/* Display message content with custom renderers */}
-              <div className="mt-1">
+            <div className="mt-1">
                 {shouldShowOriginal ? (
                   // Render the original message with mention chips
                   <div>
                     {parseInputForMentions(originalUserMessage).map((part, partIndex) => {
                       if (part.type === 'mention') {
-                        return (
+                      return (
                           <span 
                             key={`mention-${partIndex}`}
                             className="bg-blue-500 text-white px-2 py-1 rounded mr-1"
@@ -458,9 +458,9 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
                       </button>
                     </div>
                   ))}
-                </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
           );
         })}
         
@@ -507,12 +507,12 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
             </div>
           )}
           
-          <div className="flex items-center">
+        <div className="flex items-center">
             <div className="flex-1 relative">
               {/* Textarea field with auto-resize */}
               <textarea
                 ref={inputRef}
-                value={input}
+            value={input}
                 onChange={handleInputChangeWithMentions}
                 onKeyDown={handleKeyDownWithMentionDeletion}
                 placeholder="Type a message... Use @ to mention cards"
@@ -599,12 +599,12 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
               </div>
             </div>
             
-            <button
-              type="submit"
+          <button
+            type="submit"
               className="ml-2 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 self-end"
-            >
-              Send
-            </button>
+          >
+            Send
+          </button>
           </div>
         </div>
       </form>
