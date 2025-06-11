@@ -88,7 +88,7 @@ export default function Canvas({ onWebCardClick, onCanvasReady, onCardsChange }:
           type: 'noteCard',
           position,
           data: { label: '<p>New Note</p>' },
-          style: { width: 250 },
+          style: { width: 250, height: 320 },
         };
         setNodes((nds) => nds.concat(newNode));
       }

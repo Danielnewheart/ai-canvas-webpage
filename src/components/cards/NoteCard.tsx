@@ -62,11 +62,15 @@ function NoteCard({ id, data, selected }: NodeProps<NoteCardData>) {
   };
 
   return (
-    <div className="bg-white rounded-md shadow-lg border border-gray-200 w-full h-full">
+    <div 
+      className="bg-white rounded-md shadow-lg border border-gray-200 w-full"
+      style={{ height: data.isResized ? '100%' : '320px' }}
+    >
       <NodeResizer
         isVisible={selected}
         minWidth={200}
         minHeight={120}
+        maxHeight={640}
         onResizeEnd={onResizeEnd}
       />
 
@@ -74,7 +78,7 @@ function NoteCard({ id, data, selected }: NodeProps<NoteCardData>) {
       
       <Handle type="target" position={Position.Top} className="!bg-gray-400" />
       
-      <div className={`nodrag w-full h-full p-4 ${data.isResized ? 'overflow-y-auto' : ''}`}>
+      <div className={`nodrag w-full p-4 overflow-y-auto`} style={{ height: 'calc(100% - 20px)' }}>
         <EditorContent editor={editor} className="text-gray-900" />
       </div>
 
