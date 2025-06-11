@@ -5,11 +5,14 @@ import Canvas, { CanvasCard } from '@/components/canvas/Canvas';
 import ChatPanel from '@/components/ui/ChatPanel';
 import WebPreviewPanel from '@/components/ui/WebPreviewPanel';
 import { ReactFlowProvider } from 'reactflow';
+import { Resizable } from 're-resizable';
+import { ExternalLink, X } from 'lucide-react';
 
 export default function CanvasPage() {
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [previewTitle, setPreviewTitle] = useState<string>('');
   const [showPreview, setShowPreview] = useState(false);
+  const [isPreviewMinimized, setIsPreviewMinimized] = useState(false);
   const [addWebCardToCanvas, setAddWebCardToCanvas] = useState<((url: string) => Promise<void>) | null>(null);
   const [canvasCards, setCanvasCards] = useState<CanvasCard[]>([]);
 
@@ -17,10 +20,20 @@ export default function CanvasPage() {
     setPreviewUrl(url);
     setPreviewTitle(title || '');
     setShowPreview(true);
+    setIsPreviewMinimized(false);
   };
 
   const handleClosePreview = () => {
+    setIsPreviewMinimized(true);
+  };
+
+  const handleRestorePreview = () => {
+    setIsPreviewMinimized(false);
+  };
+
+  const handleFullClosePreview = () => {
     setShowPreview(false);
+    setIsPreviewMinimized(false);
     setPreviewUrl('');
     setPreviewTitle('');
   };
@@ -30,7 +43,7 @@ export default function CanvasPage() {
       try {
         await addWebCardToCanvas(url);
         // Optionally close the preview after adding to canvas
-        handleClosePreview();
+        handleFullClosePreview();
       } catch (error) {
         console.error('Failed to add web card to canvas:', error);
       }
@@ -66,16 +79,57 @@ export default function CanvasPage() {
         />
       </div>
 
+      {/* Minimized Web Preview Button */}
+      {showPreview && isPreviewMinimized && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className="relative">
+            <button
+              onClick={handleRestorePreview}
+              className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-colors group"
+              title="Open Web Preview"
+            >
+              <ExternalLink size={20} />
+            </button>
+            <button
+              onClick={handleFullClosePreview}
+              className="absolute -top-2 -right-2 p-1 bg-red-600 hover:bg-red-700 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              title="Close Web Preview"
+            >
+              <X size={12} />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Web Preview Panel */}
-      {showPreview && (
-        <div className="w-96 bg-gray-50 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700">
+      {showPreview && !isPreviewMinimized && (
+        <Resizable
+          className="flex-shrink-0 bg-gray-50 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700"
+          defaultSize={{
+            width: 400,
+            height: '100%',
+          }}
+          minWidth={300}
+          maxWidth={1200}
+          enable={{
+            top: false,
+            right: false,
+            bottom: false,
+            left: true,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+          }}
+          handleClasses={{ left: "z-10 bg-gray-600 hover:bg-blue-500 transition-colors w-2 h-full absolute top-0 -left-1 cursor-col-resize" }}
+        >
           <WebPreviewPanel 
             url={previewUrl}
             title={previewTitle}
             onClose={handleClosePreview}
             onAddToCanvas={handleAddToCanvas}
           />
-        </div>
+        </Resizable>
       )}
     </div>
   );

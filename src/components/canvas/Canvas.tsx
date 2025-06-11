@@ -142,11 +142,32 @@ export default function Canvas({ onWebCardClick, onCanvasReady, onCardsChange }:
   const createWebCard = useCallback(
     async (url: string, position: { x: number; y: number }) => {
       try {
-        const response = await fetch(`/api/metadata?url=${encodeURIComponent(url)}`);
+        console.log('Creating web card for URL:', url);
+        const apiUrl = `/api/metadata?url=${encodeURIComponent(url)}`;
+        console.log('Fetching metadata from:', apiUrl);
+        
+        const response = await fetch(apiUrl);
+        console.log('Fetch response status:', response.status);
+        
         const metadata = await response.json();
+        console.log('Metadata response:', metadata);
         
         if (!response.ok) {
           console.error('Failed to fetch metadata:', metadata.error);
+          // Create a basic web card even if metadata fetch fails
+          const fallbackWebCard = {
+            id: getId(),
+            type: 'webCard',
+            position,
+            data: {
+              url: url,
+              title: new URL(url).hostname,
+              siteName: new URL(url).hostname,
+              onWebCardClick,
+            },
+            style: { width: 280, height: 160 },
+          };
+          setNodes((nds) => nds.concat(fallbackWebCard));
           return;
         }
 
@@ -164,6 +185,24 @@ export default function Canvas({ onWebCardClick, onCanvasReady, onCardsChange }:
         setNodes((nds) => nds.concat(newWebCard));
       } catch (error) {
         console.error('Error creating web card:', error);
+        // Create a basic web card even when there's a network error
+        try {
+          const fallbackWebCard = {
+            id: getId(),
+            type: 'webCard',
+            position,
+            data: {
+              url: url,
+              title: new URL(url).hostname,
+              siteName: new URL(url).hostname,
+              onWebCardClick,
+            },
+            style: { width: 280, height: 160 },
+          };
+          setNodes((nds) => nds.concat(fallbackWebCard));
+        } catch (fallbackError) {
+          console.error('Error even creating fallback web card:', fallbackError);
+        }
       }
     },
     [setNodes, onWebCardClick]

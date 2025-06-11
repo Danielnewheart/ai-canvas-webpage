@@ -1,0 +1,881 @@
+# Test info
+
+- Name: WebPreviewPanel End-to-End Test >> should load content and allow navigation
+- Location: /Users/daniel_newheart/ai-dev-tasks/e2e/web-preview-panel.spec.ts:10:7
+
+# Error details
+
+```
+Error: Timed out 60000ms waiting for expect(locator).toBeVisible()
+
+Locator: locator('div[style*="contain: layout paint style"]').locator('a').filter({ hasText: 'puppeteer' })
+Expected: visible
+Received: <element(s) not found>
+Call log:
+  - expect.toBeVisible with timeout 60000ms
+  - waiting for locator('div[style*="contain: layout paint style"]').locator('a').filter({ hasText: 'puppeteer' })
+
+    at /Users/daniel_newheart/ai-dev-tasks/e2e/web-preview-panel.spec.ts:17:73
+```
+
+# Page snapshot
+
+```yaml
+- heading "E2E Test Page" [level=1]
+- paragraph: Click a button to load a URL in the WebPreviewPanel.
+- button "Load Slack Help"
+- button "Load Puppeteer Repo"
+- button "Back" [disabled]
+- button "Forward" [disabled]
+- button "Refresh"
+- heading "github.com" [level=3]
+- paragraph: https://github.com/puppeteer/puppeteer
+- link "Open in new tab":
+  - /url: https://github.com/puppeteer/puppeteer
+- button "Close"
+- link "Skip to content":
+  - /url: "#start-of-content"
+- banner:
+  - heading "Navigation Menu" [level=2]
+  - link "Homepage":
+    - /url: /
+  - navigation "Global":
+    - list:
+      - listitem:
+        - button "Product"
+      - listitem:
+        - button "Solutions"
+      - listitem:
+        - button "Resources"
+      - listitem:
+        - button "Open Source"
+      - listitem:
+        - button "Enterprise"
+      - listitem:
+        - link "Pricing":
+          - /url: https://github.com/pricing
+  - button "Search or jump to…"
+  - link "Sign in":
+    - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fpuppeteer%2Fpuppeteer
+  - link "Sign up":
+    - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=puppeteer%2Fpuppeteer
+  - button "Appearance settings"
+- main:
+  - link "puppeteer":
+    - /url: /puppeteer
+  - text: /
+  - strong:
+    - link "puppeteer":
+      - /url: /puppeteer/puppeteer
+  - text: Public
+  - list:
+    - listitem:
+      - link "You must be signed in to change notification settings":
+        - /url: /login?return_to=%2Fpuppeteer%2Fpuppeteer
+        - text: Notifications
+    - listitem:
+      - link "Fork 9.2k":
+        - /url: /login?return_to=%2Fpuppeteer%2Fpuppeteer
+    - listitem:
+      - link "You must be signed in to star a repository":
+        - /url: /login?return_to=%2Fpuppeteer%2Fpuppeteer
+        - text: Star 90.9k
+  - navigation "Repository":
+    - list:
+      - listitem:
+        - link "Code":
+          - /url: /puppeteer/puppeteer
+      - listitem:
+        - link "Issues 259":
+          - /url: /puppeteer/puppeteer/issues
+      - listitem:
+        - link "Pull requests 16":
+          - /url: /puppeteer/puppeteer/pulls
+      - listitem:
+        - link "Actions":
+          - /url: /puppeteer/puppeteer/actions
+      - listitem:
+        - link "Security":
+          - /url: /puppeteer/puppeteer/security
+      - listitem:
+        - link "Insights":
+          - /url: /puppeteer/puppeteer/pulse
+  - heading "puppeteer/puppeteer" [level=1]
+  - button "main branch": main
+  - link "19 Branches":
+    - /url: /puppeteer/puppeteer/branches
+    - strong: "19"
+    - text: Branches
+  - link "531 Tags":
+    - /url: /puppeteer/puppeteer/tags
+    - strong: "531"
+    - text: Tags
+  - combobox "Go to file"
+  - button "Code"
+  - heading "Folders and files" [level=2]
+  - table "Folders and files":
+    - rowgroup:
+      - row "Name Last commit message Last commit date":
+        - cell "Name"
+        - cell "Last commit message"
+        - cell "Last commit date"
+    - rowgroup:
+      - 'row "Latest commit juliandescottes commits by juliandescottes chore: Sync expectations for Bug 1906051 (#13917) success Commit 14ae222 · Jun 7, 2025 History 5,588 Commits"':
+        - 'cell "Latest commit juliandescottes commits by juliandescottes chore: Sync expectations for Bug 1906051 (#13917) success Commit 14ae222 · Jun 7, 2025 History 5,588 Commits"':
+          - heading "Latest commit" [level=2]
+          - link "juliandescottes":
+            - /url: /juliandescottes
+            - img "juliandescottes"
+          - link "commits by juliandescottes":
+            - /url: /puppeteer/puppeteer/commits?author=juliandescottes
+            - text: juliandescottes
+          - 'link "chore: Sync expectations for Bug 1906051 ("':
+            - /url: /puppeteer/puppeteer/commit/14ae222cc5d0a88ef893afe8fe521064b6dc8a79
+          - link "#13917":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13917
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/14ae222cc5d0a88ef893afe8fe521064b6dc8a79
+          - tooltip "success":
+            - button "success"
+          - link "Commit 14ae222":
+            - /url: /puppeteer/puppeteer/commit/14ae222cc5d0a88ef893afe8fe521064b6dc8a79
+            - text: 14ae222
+          - text: · Jun 7, 2025
+          - heading "History" [level=2]
+          - link "5,588 Commits":
+            - /url: /puppeteer/puppeteer/commits/main/
+      - 'row ".devcontainer, (Directory) chore: update devcontainer.json (#13923) Jun 6, 2025"':
+        - cell ".devcontainer, (Directory)":
+          - link ".devcontainer, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/.devcontainer
+            - text: .devcontainer
+        - 'cell "chore: update devcontainer.json (#13923)"':
+          - 'link "chore: update devcontainer.json ("':
+            - /url: /puppeteer/puppeteer/commit/c234e81fe2638ad2b8e4999373fd8a919f1cd52d
+          - link "#13923":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13923
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/c234e81fe2638ad2b8e4999373fd8a919f1cd52d
+        - cell "Jun 6, 2025"
+      - 'row ".github, (Directory) chore(deps): Bump the all group with 2 updates (#13916) Jun 4, 2025"':
+        - cell ".github, (Directory)":
+          - link ".github, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/.github
+            - text: .github
+        - 'cell "chore(deps): Bump the all group with 2 updates (#13916)"':
+          - 'link "chore(deps): Bump the all group with 2 updates ("':
+            - /url: /puppeteer/puppeteer/commit/0f0882c405878f3b5bca1316f5effb2692f20d81
+          - link "#13916":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13916
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/0f0882c405878f3b5bca1316f5effb2692f20d81
+        - cell "Jun 4, 2025"
+      - 'row ".vscode, (Directory) test: remove firefox-cdp test suite (#13424) Dec 19, 2024"':
+        - cell ".vscode, (Directory)":
+          - link ".vscode, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/.vscode
+            - text: .vscode
+        - 'cell "test: remove firefox-cdp test suite (#13424)"':
+          - 'link "test: remove firefox-cdp test suite ("':
+            - /url: /puppeteer/puppeteer/commit/c072482032e828f87a4c98c1d01c72490cf7ba79
+          - link "#13424":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13424
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/c072482032e828f87a4c98c1d01c72490cf7ba79
+        - cell "Dec 19, 2024"
+      - 'row "docker, (Directory) chore(deps): Bump node from e558507 to 0b5b940 in /docker in the … May 26, 2025"':
+        - cell "docker, (Directory)":
+          - link "docker, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/docker
+            - text: docker
+        - 'cell "chore(deps): Bump node from e558507 to 0b5b940 in /docker in the …"':
+          - 'link "chore(deps): Bump node from e558507 to 0b5b940 in /docker in the …"':
+            - /url: /puppeteer/puppeteer/commit/6cbfe6fb605e5fffe9676a9d1343b705600e1149
+            - text: "chore(deps): Bump node from"
+            - code: e558507
+            - text: to
+            - code: 0b5b940
+            - text: in /docker in the …
+        - cell "May 26, 2025"
+      - 'row "docs, (Directory) chore: release main (#13897) Jun 2, 2025"':
+        - cell "docs, (Directory)":
+          - link "docs, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/docs
+            - text: docs
+        - 'cell "chore: release main (#13897)"':
+          - 'link "chore: release main ("':
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+          - link "#13897":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13897
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+        - cell "Jun 2, 2025"
+      - 'row "examples, (Directory) fix: revert \"refactor: allow importing chromium-bidi ESM\" (#13849) May 6, 2025"':
+        - cell "examples, (Directory)":
+          - link "examples, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/examples
+            - text: examples
+        - 'cell "fix: revert \"refactor: allow importing chromium-bidi ESM\" (#13849)"':
+          - 'link "fix: revert \"refactor: allow importing chromium-bidi ESM\" ("':
+            - /url: /puppeteer/puppeteer/commit/e7f514ab5a55ffed015cd89bc69feb059bf5da0c
+          - link "#13849":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13849
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/e7f514ab5a55ffed015cd89bc69feb059bf5da0c
+        - cell "May 6, 2025"
+      - 'row "packages, (Directory) chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914 Jun 3, 2025"':
+        - cell "packages, (Directory)":
+          - link "packages, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/packages
+            - text: packages
+        - 'cell "chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914"':
+          - 'link "chore(deps-dev): Bump the dev-dependencies group with 10 updates ("':
+            - /url: /puppeteer/puppeteer/commit/3dabf0ef5d6d60d3525d187a10ffe49c87620f33
+          - link "#13914":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13914
+        - cell "Jun 3, 2025"
+      - 'row "test-d, (Directory) fix: revert \"refactor: allow importing chromium-bidi ESM\" (#13849) May 6, 2025"':
+        - cell "test-d, (Directory)":
+          - link "test-d, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/test-d
+            - text: test-d
+        - 'cell "fix: revert \"refactor: allow importing chromium-bidi ESM\" (#13849)"':
+          - 'link "fix: revert \"refactor: allow importing chromium-bidi ESM\" ("':
+            - /url: /puppeteer/puppeteer/commit/e7f514ab5a55ffed015cd89bc69feb059bf5da0c
+          - link "#13849":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13849
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/e7f514ab5a55ffed015cd89bc69feb059bf5da0c
+        - cell "May 6, 2025"
+      - 'row "test, (Directory) chore: Sync expectations for Bug 1906051 (#13917) Jun 7, 2025"':
+        - cell "test, (Directory)":
+          - link "test, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/test
+            - text: test
+        - 'cell "chore: Sync expectations for Bug 1906051 (#13917)"':
+          - 'link "chore: Sync expectations for Bug 1906051 ("':
+            - /url: /puppeteer/puppeteer/commit/14ae222cc5d0a88ef893afe8fe521064b6dc8a79
+          - link "#13917":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13917
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/14ae222cc5d0a88ef893afe8fe521064b6dc8a79
+        - cell "Jun 7, 2025"
+      - 'row "tools, (Directory) chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914 Jun 3, 2025"':
+        - cell "tools, (Directory)":
+          - link "tools, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/tools
+            - text: tools
+        - 'cell "chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914"':
+          - 'link "chore(deps-dev): Bump the dev-dependencies group with 10 updates ("':
+            - /url: /puppeteer/puppeteer/commit/3dabf0ef5d6d60d3525d187a10ffe49c87620f33
+          - link "#13914":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13914
+        - cell "Jun 3, 2025"
+      - 'row "website, (Directory) chore: release main (#13897) Jun 2, 2025"':
+        - cell "website, (Directory)":
+          - link "website, (Directory)":
+            - /url: /puppeteer/puppeteer/tree/main/website
+            - text: website
+        - 'cell "chore: release main (#13897)"':
+          - 'link "chore: release main ("':
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+          - link "#13897":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13897
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+        - cell "Jun 2, 2025"
+      - 'row ".editorconfig, (File) EditorConfig: 2 space indent (#195) Aug 4, 2017"':
+        - cell ".editorconfig, (File)":
+          - link ".editorconfig, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.editorconfig
+            - text: .editorconfig
+        - 'cell "EditorConfig: 2 space indent (#195)"':
+          - 'link "EditorConfig: 2 space indent ("':
+            - /url: /puppeteer/puppeteer/commit/211c372a3afc01bcb1643898ac11452d9b6e183a
+          - link "#195":
+            - /url: https://github.com/puppeteer/puppeteer/pull/195
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/211c372a3afc01bcb1643898ac11452d9b6e183a
+        - cell "Aug 4, 2017"
+      - 'row ".gitattributes, (File) chore(git): Fix line endings in text files (#4320) Apr 23, 2019"':
+        - cell ".gitattributes, (File)":
+          - link ".gitattributes, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.gitattributes
+            - text: .gitattributes
+        - 'cell "chore(git): Fix line endings in text files (#4320)"':
+          - 'link "chore(git): Fix line endings in text files ("':
+            - /url: /puppeteer/puppeteer/commit/2d536519a4ba6b4103954d700fb18d023db4ce4e
+          - link "#4320":
+            - /url: https://github.com/puppeteer/puppeteer/pull/4320
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/2d536519a4ba6b4103954d700fb18d023db4ce4e
+        - cell "Apr 23, 2019"
+      - 'row ".gitignore, (File) chore: fix EsLint for .mjs (#11629) Jan 8, 2024"':
+        - cell ".gitignore, (File)":
+          - link ".gitignore, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.gitignore
+            - text: .gitignore
+        - 'cell "chore: fix EsLint for .mjs (#11629)"':
+          - 'link "chore: fix EsLint for"':
+            - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+          - code:
+            - link ".mjs":
+              - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+          - link "(":
+            - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+          - link "#11629":
+            - /url: https://github.com/puppeteer/puppeteer/pull/11629
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+        - cell "Jan 8, 2024"
+      - 'row ".mocharc.cjs, (File) chore(dependecies): update EsLint to v9 (#13203) Oct 22, 2024"':
+        - cell ".mocharc.cjs, (File)":
+          - link ".mocharc.cjs, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.mocharc.cjs
+            - text: .mocharc.cjs
+        - 'cell "chore(dependecies): update EsLint to v9 (#13203)"':
+          - 'link "chore(dependecies): update EsLint to v9 ("':
+            - /url: /puppeteer/puppeteer/commit/cfd1718a4c38dda7f85a9416edb26f6a1653c752
+          - link "#13203":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13203
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/cfd1718a4c38dda7f85a9416edb26f6a1653c752
+        - cell "Oct 22, 2024"
+      - 'row ".npmrc, (File) chore(deps): Bump the dependencies group with 2 updates (#11939) Feb 22, 2024"':
+        - cell ".npmrc, (File)":
+          - link ".npmrc, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.npmrc
+            - text: .npmrc
+        - 'cell "chore(deps): Bump the dependencies group with 2 updates (#11939)"':
+          - 'link "chore(deps): Bump the dependencies group with 2 updates ("':
+            - /url: /puppeteer/puppeteer/commit/5bbee1068f79485d1b5c1ed879199213a9501e63
+          - link "#11939":
+            - /url: https://github.com/puppeteer/puppeteer/pull/11939
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/5bbee1068f79485d1b5c1ed879199213a9501e63
+        - cell "Feb 22, 2024"
+      - 'row ".nvmrc, (File) chore: bump node to v22 (#13342) Nov 29, 2024"':
+        - cell ".nvmrc, (File)":
+          - link ".nvmrc, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.nvmrc
+            - text: .nvmrc
+        - 'cell "chore: bump node to v22 (#13342)"':
+          - 'link "chore: bump node to v22 ("':
+            - /url: /puppeteer/puppeteer/commit/5dbc9374d6622d4fbd72f2c3a2e6445f18465133
+          - link "#13342":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13342
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/5dbc9374d6622d4fbd72f2c3a2e6445f18465133
+        - cell "Nov 29, 2024"
+      - 'row ".prettierignore, (File) chore: fix EsLint for .mjs (#11629) Jan 8, 2024"':
+        - cell ".prettierignore, (File)":
+          - link ".prettierignore, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.prettierignore
+            - text: .prettierignore
+        - 'cell "chore: fix EsLint for .mjs (#11629)"':
+          - 'link "chore: fix EsLint for"':
+            - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+          - code:
+            - link ".mjs":
+              - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+          - link "(":
+            - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+          - link "#11629":
+            - /url: https://github.com/puppeteer/puppeteer/pull/11629
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/35e39bfae9039742c2aeb3e7c19fe55796e10294
+        - cell "Jan 8, 2024"
+      - 'row ".prettierrc.cjs, (File) chore(dependecies): update EsLint to v9 (#13203) Oct 22, 2024"':
+        - cell ".prettierrc.cjs, (File)":
+          - link ".prettierrc.cjs, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.prettierrc.cjs
+            - text: .prettierrc.cjs
+        - 'cell "chore(dependecies): update EsLint to v9 (#13203)"':
+          - 'link "chore(dependecies): update EsLint to v9 ("':
+            - /url: /puppeteer/puppeteer/commit/cfd1718a4c38dda7f85a9416edb26f6a1653c752
+          - link "#13203":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13203
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/cfd1718a4c38dda7f85a9416edb26f6a1653c752
+        - cell "Oct 22, 2024"
+      - 'row ".release-please-manifest.json, (File) chore: release main (#13897) Jun 2, 2025"':
+        - cell ".release-please-manifest.json, (File)":
+          - link ".release-please-manifest.json, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/.release-please-manifest.json
+            - text: .release-please-manifest.json
+        - 'cell "chore: release main (#13897)"':
+          - 'link "chore: release main ("':
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+          - link "#13897":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13897
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+        - cell "Jun 2, 2025"
+      - 'row "CHANGELOG.md, (File) chore: release main (#13897) Jun 2, 2025"':
+        - cell "CHANGELOG.md, (File)":
+          - link "CHANGELOG.md, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/CHANGELOG.md
+            - text: CHANGELOG.md
+        - 'cell "chore: release main (#13897)"':
+          - 'link "chore: release main ("':
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+          - link "#13897":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13897
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/1afc8e4f0a67641cdcc95d29ebe02a508f0141c7
+        - cell "Jun 2, 2025"
+      - 'row "Herebyfile.mjs, (File) docs: escape characters for MDX in /website (#13486) Jan 10, 2025"':
+        - cell "Herebyfile.mjs, (File)":
+          - link "Herebyfile.mjs, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/Herebyfile.mjs
+            - text: Herebyfile.mjs
+        - 'cell "docs: escape characters for MDX in /website (#13486)"':
+          - 'link "docs: escape characters for MDX in /website ("':
+            - /url: /puppeteer/puppeteer/commit/908accfc3f6dccd006d495e170e9a8a8f11eec14
+          - link "#13486":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13486
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/908accfc3f6dccd006d495e170e9a8a8f11eec14
+        - cell "Jan 10, 2025"
+      - 'row "LICENSE, (File) chore: use https URL for license info (#6279) Aug 10, 2020"':
+        - cell "LICENSE, (File)":
+          - link "LICENSE, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/LICENSE
+            - text: LICENSE
+        - 'cell "chore: use https URL for license info (#6279)"':
+          - 'link "chore: use https URL for license info ("':
+            - /url: /puppeteer/puppeteer/commit/615cd37f965faba191903bee84f4c747b1ea7188
+          - link "#6279":
+            - /url: https://github.com/puppeteer/puppeteer/pull/6279
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/615cd37f965faba191903bee84f4c747b1ea7188
+        - cell "Aug 10, 2020"
+      - 'row "README.md, (File) docs: use locator with ARIA selectors (#13808) Apr 24, 2025"':
+        - cell "README.md, (File)":
+          - link "README.md, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/README.md
+            - text: README.md
+        - 'cell "docs: use locator with ARIA selectors (#13808)"':
+          - 'link "docs: use locator with ARIA selectors ("':
+            - /url: /puppeteer/puppeteer/commit/c707a8e2a256e9b28122325527cc9a4d59aa5680
+          - link "#13808":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13808
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/c707a8e2a256e9b28122325527cc9a4d59aa5680
+        - cell "Apr 24, 2025"
+      - 'row "SECURITY.md, (File) chore: Add a security policy (#9547) Jan 20, 2023"':
+        - cell "SECURITY.md, (File)":
+          - link "SECURITY.md, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/SECURITY.md
+            - text: SECURITY.md
+        - 'cell "chore: Add a security policy (#9547)"':
+          - 'link "chore: Add a security policy ("':
+            - /url: /puppeteer/puppeteer/commit/094632781d29a50abea85fe8ea22107fab566a5f
+          - link "#9547":
+            - /url: https://github.com/puppeteer/puppeteer/pull/9547
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/094632781d29a50abea85fe8ea22107fab566a5f
+        - cell "Jan 20, 2023"
+      - 'row "eslint.config.mjs, (File) chore: update EsLint config (#13861) May 14, 2025"':
+        - cell "eslint.config.mjs, (File)":
+          - link "eslint.config.mjs, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/eslint.config.mjs
+            - text: eslint.config.mjs
+        - 'cell "chore: update EsLint config (#13861)"':
+          - 'link "chore: update EsLint config ("':
+            - /url: /puppeteer/puppeteer/commit/eb5f00bbfce981816ac52bdc3f6623749d23fdfa
+          - link "#13861":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13861
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/eb5f00bbfce981816ac52bdc3f6623749d23fdfa
+        - cell "May 14, 2025"
+      - 'row "eslint.types.config.mjs, (File) chore: update EsLint preset (#13547) Jan 24, 2025"':
+        - cell "eslint.types.config.mjs, (File)":
+          - link "eslint.types.config.mjs, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/eslint.types.config.mjs
+            - text: eslint.types.config.mjs
+        - 'cell "chore: update EsLint preset (#13547)"':
+          - 'link "chore: update EsLint preset ("':
+            - /url: /puppeteer/puppeteer/commit/48865f4c0bf1b466b8c9750cdc467a283deb35e5
+          - link "#13547":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13547
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/48865f4c0bf1b466b8c9750cdc467a283deb35e5
+        - cell "Jan 24, 2025"
+      - 'row "package-lock.json, (File) chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914 Jun 3, 2025"':
+        - cell "package-lock.json, (File)":
+          - link "package-lock.json, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/package-lock.json
+            - text: package-lock.json
+        - 'cell "chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914"':
+          - 'link "chore(deps-dev): Bump the dev-dependencies group with 10 updates ("':
+            - /url: /puppeteer/puppeteer/commit/3dabf0ef5d6d60d3525d187a10ffe49c87620f33
+          - link "#13914":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13914
+        - cell "Jun 3, 2025"
+      - 'row "package.json, (File) chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914 Jun 3, 2025"':
+        - cell "package.json, (File)":
+          - link "package.json, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/package.json
+            - text: package.json
+        - 'cell "chore(deps-dev): Bump the dev-dependencies group with 10 updates (#13914"':
+          - 'link "chore(deps-dev): Bump the dev-dependencies group with 10 updates ("':
+            - /url: /puppeteer/puppeteer/commit/3dabf0ef5d6d60d3525d187a10ffe49c87620f33
+          - link "#13914":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13914
+        - cell "Jun 3, 2025"
+      - 'row "puppeteer.config.cjs, (File) feat!: support multiple browser downloads for Puppeteer (#12795) Aug 6, 2024"':
+        - cell "puppeteer.config.cjs, (File)":
+          - link "puppeteer.config.cjs, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/puppeteer.config.cjs
+            - text: puppeteer.config.cjs
+        - 'cell "feat!: support multiple browser downloads for Puppeteer (#12795)"':
+          - 'link "feat!: support multiple browser downloads for Puppeteer ("':
+            - /url: /puppeteer/puppeteer/commit/4d4b358dca34ab23df075efd08a62947e6feb98c
+          - link "#12795":
+            - /url: https://github.com/puppeteer/puppeteer/pull/12795
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/4d4b358dca34ab23df075efd08a62947e6feb98c
+        - cell "Aug 6, 2024"
+      - 'row "release-please-config.json, (File) chore: fix release please issue (#13608) Feb 10, 2025"':
+        - cell "release-please-config.json, (File)":
+          - link "release-please-config.json, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/release-please-config.json
+            - text: release-please-config.json
+        - 'cell "chore: fix release please issue (#13608)"':
+          - 'link "chore: fix release please issue ("':
+            - /url: /puppeteer/puppeteer/commit/fad9744fea7430ca96ffd1005cad5082bcb5ca8f
+          - link "#13608":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13608
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/fad9744fea7430ca96ffd1005cad5082bcb5ca8f
+        - cell "Feb 10, 2025"
+      - 'row "tsconfig.base.json, (File) chore(dependencies): update deps (#13220) Oct 22, 2024"':
+        - cell "tsconfig.base.json, (File)":
+          - link "tsconfig.base.json, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/tsconfig.base.json
+            - text: tsconfig.base.json
+        - 'cell "chore(dependencies): update deps (#13220)"':
+          - 'link "chore(dependencies): update deps ("':
+            - /url: /puppeteer/puppeteer/commit/6c5645c59478ca4310132a46268548390639452e
+          - link "#13220":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13220
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/6c5645c59478ca4310132a46268548390639452e
+        - cell "Oct 22, 2024"
+      - 'row "tsdoc.json, (File) chore: update license headers (#11563) Jan 3, 2024"':
+        - cell "tsdoc.json, (File)":
+          - link "tsdoc.json, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/tsdoc.json
+            - text: tsdoc.json
+        - 'cell "chore: update license headers (#11563)"':
+          - 'link "chore: update license headers ("':
+            - /url: /puppeteer/puppeteer/commit/b6c5642cc96cd4f8c81069008e5828bdbddba27f
+          - link "#11563":
+            - /url: https://github.com/puppeteer/puppeteer/pull/11563
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/b6c5642cc96cd4f8c81069008e5828bdbddba27f
+        - cell "Jan 3, 2024"
+      - 'row "versions.json, (File) fix: roll to Chrome 137.0.7151.68 (#13918) Jun 3, 2025"':
+        - cell "versions.json, (File)":
+          - link "versions.json, (File)":
+            - /url: /puppeteer/puppeteer/blob/main/versions.json
+            - text: versions.json
+        - 'cell "fix: roll to Chrome 137.0.7151.68 (#13918)"':
+          - 'link "fix: roll to Chrome 137.0.7151.68 ("':
+            - /url: /puppeteer/puppeteer/commit/7ae67cddacd1dfb725555ee6d1966573e806d865
+          - link "#13918":
+            - /url: https://github.com/puppeteer/puppeteer/pull/13918
+          - link ")":
+            - /url: /puppeteer/puppeteer/commit/7ae67cddacd1dfb725555ee6d1966573e806d865
+        - cell "Jun 3, 2025"
+  - heading "Repository files navigation" [level=2]
+  - navigation "Repository files":
+    - list:
+      - listitem:
+        - link "README":
+          - /url: "#"
+      - listitem:
+        - link "Apache-2.0 license":
+          - /url: "#"
+      - listitem:
+        - link "Security":
+          - /url: "#"
+  - button "Outline"
+  - article:
+    - heading "Puppeteer" [level=1]
+    - 'link "Permalink: Puppeteer"':
+      - /url: "#puppeteer"
+    - paragraph:
+      - link "build":
+        - /url: https://github.com/puppeteer/puppeteer/actions/workflows/ci.yml
+        - img "build"
+      - link "npm puppeteer package":
+        - /url: https://npmjs.org/package/puppeteer
+        - img "npm puppeteer package"
+    - paragraph:
+      - link:
+        - /url: https://user-images.githubusercontent.com/10379601/29446482-04f7036a-841f-11e7-9872-91d1fc2ea683.png
+        - img
+    - blockquote:
+      - paragraph:
+        - text: Puppeteer is a JavaScript library which provides a high-level API to control Chrome or Firefox over the
+        - link "DevTools Protocol":
+          - /url: https://chromedevtools.github.io/devtools-protocol/
+        - text: or
+        - link "WebDriver BiDi":
+          - /url: https://pptr.dev/webdriver-bidi
+        - text: . Puppeteer runs in the headless (no visible UI) by default
+    - heading "Get started | API | FAQ | Contributing | Troubleshooting" [level=2]:
+      - link "Get started":
+        - /url: https://pptr.dev/docs
+      - text: "|"
+      - link "API":
+        - /url: https://pptr.dev/api
+      - text: "|"
+      - link "FAQ":
+        - /url: https://pptr.dev/faq
+      - text: "|"
+      - link "Contributing":
+        - /url: https://pptr.dev/contributing
+      - text: "|"
+      - link "Troubleshooting":
+        - /url: https://pptr.dev/troubleshooting
+    - 'link "Permalink: Get started | API | FAQ | Contributing | Troubleshooting"':
+      - /url: "#get-started--api--faq--contributing--troubleshooting"
+    - heading "Installation" [level=2]
+    - 'link "Permalink: Installation"':
+      - /url: "#installation"
+    - text: "npm i puppeteer # Downloads compatible Chrome during installation. npm i puppeteer-core # Alternatively, install as a library, without downloading Chrome."
+    - button "Copy"
+    - heading "Example" [level=2]
+    - 'link "Permalink: Example"':
+      - /url: "#example"
+    - text: "import puppeteer from 'puppeteer'; // Or import puppeteer from 'puppeteer-core'; // Launch the browser and open a new blank page const browser = await puppeteer.launch(); const page = await browser.newPage(); // Navigate the page to a URL. await page.goto('https://developer.chrome.com/'); // Set screen size. await page.setViewport({width: 1080, height: 1024}); // Type into search box using accessible input name. await page.locator('aria/Search').fill('automate beyond recorder'); // Wait and click on first result. await page.locator('.devsite-result-item-link').click(); // Locate the full title with a unique string. const textSelector = await page .locator('text/Customize and automate') .waitHandle(); const fullTitle = await textSelector?.evaluate(el => el.textContent); // Print the full title. console.log('The title of this blog post is \"%s\".', fullTitle); await browser.close();"
+    - button "Copy"
+  - heading "About" [level=2]
+  - paragraph: JavaScript API for Chrome and Firefox
+  - link "pptr.dev":
+    - /url: https://pptr.dev
+  - heading "Topics" [level=3]
+  - link "testing":
+    - /url: /topics/testing
+  - link "firefox":
+    - /url: /topics/firefox
+  - link "chrome":
+    - /url: /topics/chrome
+  - link "automation":
+    - /url: /topics/automation
+  - link "web":
+    - /url: /topics/web
+  - link "chromium":
+    - /url: /topics/chromium
+  - link "developer-tools":
+    - /url: /topics/developer-tools
+  - link "node-module":
+    - /url: /topics/node-module
+  - link "headless-chrome":
+    - /url: /topics/headless-chrome
+  - heading "Resources" [level=3]
+  - link "Readme":
+    - /url: "#readme-ov-file"
+  - heading "License" [level=3]
+  - link "Apache-2.0 license":
+    - /url: "#Apache-2.0-1-ov-file"
+  - heading "Security policy" [level=3]
+  - link "Security policy":
+    - /url: "#security-ov-file"
+  - link "Activity":
+    - /url: /puppeteer/puppeteer/activity
+  - link "Custom properties":
+    - /url: /puppeteer/puppeteer/custom-properties
+  - heading "Stars" [level=3]
+  - link "90.9k stars":
+    - /url: /puppeteer/puppeteer/stargazers
+    - strong: 90.9k
+    - text: stars
+  - heading "Watchers" [level=3]
+  - link "1.2k watching":
+    - /url: /puppeteer/puppeteer/watchers
+    - strong: 1.2k
+    - text: watching
+  - heading "Forks" [level=3]
+  - link "9.2k forks":
+    - /url: /puppeteer/puppeteer/forks
+    - strong: 9.2k
+    - text: forks
+  - link "Report repository":
+    - /url: /contact/report-content?content_url=https%3A%2F%2Fgithub.com%2Fpuppeteer%2Fpuppeteer&report=puppeteer+%28user%29
+  - heading "Releases 530" [level=2]:
+    - link "Releases 530":
+      - /url: /puppeteer/puppeteer/releases
+  - 'link "puppeteer-core: v24.10.0 Latest Jun 2, 2025"':
+    - /url: /puppeteer/puppeteer/releases/tag/puppeteer-core-v24.10.0
+  - link "+ 529 releases":
+    - /url: /puppeteer/puppeteer/releases
+  - heading "Packages 1" [level=2]:
+    - link "Packages 1":
+      - /url: /orgs/puppeteer/packages?repo_name=puppeteer
+  - list:
+    - listitem:
+      - link "puppeteer":
+        - /url: /orgs/puppeteer/packages/container/package/puppeteer
+  - heading "Contributors 520" [level=2]:
+    - link "Contributors 520":
+      - /url: /puppeteer/puppeteer/graphs/contributors
+  - list:
+    - listitem:
+      - link "@OrKoN":
+        - /url: https://github.com/OrKoN
+        - img "@OrKoN"
+    - listitem:
+      - link "@aslushnikov":
+        - /url: https://github.com/aslushnikov
+        - img "@aslushnikov"
+    - listitem:
+      - link "@release-please[bot]":
+        - /url: https://github.com/apps/release-please
+        - img "@release-please[bot]"
+    - listitem:
+      - link "@dependabot[bot]":
+        - /url: https://github.com/apps/dependabot
+        - img "@dependabot[bot]"
+    - listitem:
+      - link "@Lightning00Blade":
+        - /url: https://github.com/Lightning00Blade
+        - img "@Lightning00Blade"
+    - listitem:
+      - link "@jrandolf-2":
+        - /url: https://github.com/jrandolf-2
+        - img "@jrandolf-2"
+    - listitem:
+      - link "@jackfranklin":
+        - /url: https://github.com/jackfranklin
+        - img "@jackfranklin"
+    - listitem:
+      - link "@JoelEinbinder":
+        - /url: https://github.com/JoelEinbinder
+        - img "@JoelEinbinder"
+    - listitem:
+      - link "@mathiasbynens":
+        - /url: https://github.com/mathiasbynens
+        - img "@mathiasbynens"
+    - listitem:
+      - link "@jschfflr":
+        - /url: https://github.com/jschfflr
+        - img "@jschfflr"
+    - listitem:
+      - link "@browser-automation-bot":
+        - /url: https://github.com/browser-automation-bot
+        - img "@browser-automation-bot"
+    - listitem:
+      - link "@kblok":
+        - /url: https://github.com/kblok
+        - img "@kblok"
+    - listitem:
+      - link "@ebidel":
+        - /url: https://github.com/ebidel
+        - img "@ebidel"
+    - listitem:
+      - link "@vsemozhetbyt":
+        - /url: https://github.com/vsemozhetbyt
+        - img "@vsemozhetbyt"
+  - link "+ 506 contributors":
+    - /url: /puppeteer/puppeteer/graphs/contributors
+  - heading "Languages" [level=2]
+  - list:
+    - listitem:
+      - link "TypeScript 93.1%":
+        - /url: /puppeteer/puppeteer/search?l=typescript
+    - listitem:
+      - link "JavaScript 5.4%":
+        - /url: /puppeteer/puppeteer/search?l=javascript
+    - listitem:
+      - link "HTML 1.2%":
+        - /url: /puppeteer/puppeteer/search?l=html
+    - listitem: Other 0.3%
+- contentinfo:
+  - heading "Footer" [level=2]
+  - link "GitHub Homepage":
+    - /url: https://github.com
+  - text: © 2025 GitHub, Inc.
+  - navigation "Footer":
+    - heading "Footer navigation" [level=3]
+    - list "Footer navigation":
+      - listitem:
+        - link "Terms":
+          - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+      - listitem:
+        - link "Privacy":
+          - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+      - listitem:
+        - link "Security":
+          - /url: https://github.com/security
+      - listitem:
+        - link "Status":
+          - /url: https://www.githubstatus.com/
+      - listitem:
+        - link "Docs":
+          - /url: https://docs.github.com/
+      - listitem:
+        - link "Contact":
+          - /url: https://support.github.com?tags=dotcom-footer
+      - listitem:
+        - button "Manage cookies"
+      - listitem:
+        - button "Do not share my personal information"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```
+
+# Test source
+
+```ts
+   1 | import { test, expect } from '@playwright/test';
+   2 |
+   3 | test.describe('WebPreviewPanel End-to-End Test', () => {
+   4 |
+   5 |   test.beforeEach(async ({ page }) => {
+   6 |     // Navigate to the test page
+   7 |     await page.goto('/test/web-preview');
+   8 |   });
+   9 |
+  10 |   test('should load content and allow navigation', async ({ page }) => {
+  11 |     // 1. Click the button to load the GitHub page
+  12 |     await page.click('#load-github-btn');
+  13 |
+  14 |     // 2. Wait for the content to be loaded into the panel
+  15 |     const previewLocator = page.locator('div[style*="contain: layout paint style"]');
+  16 |     // Check for the repo name, which is a stable element
+> 17 |     await expect(previewLocator.locator('a', { hasText: 'puppeteer' })).toBeVisible({ timeout: 60000 });
+     |                                                                         ^ Error: Timed out 60000ms waiting for expect(locator).toBeVisible()
+  18 |     
+  19 |     // 3. Find and click a link within the loaded content (e.g., to the "discussions" tab)
+  20 |     const discussionsLink = previewLocator.locator('a#discussions-tab');
+  21 |     await discussionsLink.click();
+  22 |
+  23 |     // 4. Verify that the new page has loaded by checking for a known element on that page
+  24 |     await expect(previewLocator.locator('h2', { hasText: 'Welcome to the puppeteer community' })).toBeVisible({ timeout: 60000 });
+  25 |
+  26 |     // 5. Use the "Back" button in our custom controls
+  27 |     const backButton = page.locator('button[title="Back"]');
+  28 |     await backButton.click();
+  29 |     
+  30 |     // 6. Verify that we have returned to the original page
+  31 |     await expect(previewLocator.locator('a', { hasText: 'puppeteer' })).toBeVisible({ timeout: 60000 });
+  32 |
+  33 |     // 7. Use the "Forward" button
+  34 |     const forwardButton = page.locator('button[title="Forward"]');
+  35 |     await forwardButton.click();
+  36 |     await expect(previewLocator.locator('h2', { hasText: 'Welcome to the puppeteer community' })).toBeVisible({ timeout: 60000 });
+  37 |
+  38 |     // 8. Close the panel
+  39 |     const closeButton = page.locator('button[title="Close"]');
+  40 |     await closeButton.click();
+  41 |
+  42 |     // 9. Verify the panel is gone (e.g., by checking for the "No URL" state)
+  43 |     await expect(page.locator('p', { hasText: 'No URL to preview' })).toBeVisible();
+  44 |   });
+  45 | }); 
+```
