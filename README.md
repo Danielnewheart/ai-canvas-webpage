@@ -39,13 +39,7 @@ AI Canvas is an innovative canvas-based note-taking and research tool designed f
 
 3. **Environment Variable Setup**
    
-   Create a `.env.local` file and add the necessary API keys:
-   ```bash
-   # Copy environment variable template
-   cp .env.example .env.local
-   ```
-   
-   Edit the `.env.local` file:
+   Create a `.env.local` file and add the necessary API keys. Edit the `.env.local` file:
    ```env
    # OpenAI API Key
    OPENAI_API_KEY="your_openai_api_key_here"
