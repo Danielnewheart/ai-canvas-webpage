@@ -47,7 +47,10 @@ AI Canvas is an innovative canvas-based note-taking and research tool designed f
    
    Edit the `.env.local` file:
    ```env
-   # Perplexity AI API Key (for web search and AI chat)
+   # OpenAI API Key
+   OPENAI_API_KEY="your_openai_api_key_here"
+   
+   # Perplexity AI API Key
    PERPLEXITY_API_KEY=your_perplexity_api_key_here
    
    # Other optional configurations
