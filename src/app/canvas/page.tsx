@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Canvas, { CanvasCard } from '@/components/canvas/Canvas';
 import ChatPanel from '@/components/ui/ChatPanel';
 import WebPreviewPanel from '@/components/ui/WebPreviewPanel';
@@ -11,6 +11,7 @@ import { ExternalLink, X, MessageSquare } from 'lucide-react';
 
 function CanvasPageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const initialMessage = searchParams.get('message');
   
   const [previewUrl, setPreviewUrl] = useState<string>('');
@@ -67,6 +68,13 @@ function CanvasPageContent() {
 
   const handleAutoSendComplete = () => {
     setShouldAutoSendMessage(false);
+  };
+
+  const handleAutoSendStart = () => {
+    // Clear the message parameter from URL immediately when sending starts
+    if (initialMessage) {
+      router.replace('/canvas');
+    }
   };
 
   const handleAddToCanvas = async (url: string) => {
@@ -173,6 +181,7 @@ function CanvasPageContent() {
             onClose={handleCloseChatPanel}
             initialMessage={initialMessage || ''}
             shouldAutoSend={shouldAutoSendMessage}
+            onAutoSendStart={handleAutoSendStart}
             onAutoSendComplete={handleAutoSendComplete}
           />
         </Resizable>

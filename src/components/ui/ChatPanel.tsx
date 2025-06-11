@@ -20,6 +20,7 @@ interface ChatPanelProps {
   onClose?: () => void;
   initialMessage?: string;
   shouldAutoSend?: boolean;
+  onAutoSendStart?: () => void;
   onAutoSendComplete?: () => void;
 }
 
@@ -35,6 +36,7 @@ export default function ChatPanel({
   onClose, 
   initialMessage, 
   shouldAutoSend = false, 
+  onAutoSendStart,
   onAutoSendComplete 
 }: ChatPanelProps) {
   const [originalUserMessage, setOriginalUserMessage] = useState<string>('');
@@ -68,6 +70,9 @@ export default function ChatPanel({
     if (shouldAutoSend && initialMessage && initialMessage.trim() && !hasAutoSentRef.current) {
       hasAutoSentRef.current = true;
       
+      // Notify parent that auto-send is starting (to clear URL)
+      onAutoSendStart?.();
+      
       // Auto-submit the message directly
       append({
         role: 'user',
@@ -79,7 +84,7 @@ export default function ChatPanel({
         console.error('Auto-send failed:', error);
       });
     }
-  }, [shouldAutoSend, initialMessage, append, onAutoSendComplete]);
+  }, [shouldAutoSend, initialMessage]); // Remove append and onAutoSendComplete from dependencies
 
   // Custom renderer for markdown links to handle citations
   const createCustomRenderers = (citations: Citation[]) => ({
@@ -333,8 +338,6 @@ export default function ChatPanel({
        }).join('\n\n');
        
        const enrichedMessage = `${input}\n\n---Canvas Context---\n${contextString}`;
-       
-       console.log('Sending enriched message:', enrichedMessage); // Debug
        
        // Track this message for display purposes
        setLastMessageWithContext(enrichedMessage);

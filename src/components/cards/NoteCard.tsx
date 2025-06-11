@@ -30,6 +30,16 @@ function NoteCard({ id, data, selected }: NodeProps<NoteCardData>) {
         // The editor itself should not scroll, its parent will.
         class: `prose prose-sm focus:outline-none w-full`,
       },
+      transformPastedHTML: (html) => {
+        // Remove problematic images and clean up HTML when pasting
+        return html
+          .replace(/<img[^>]*src="\/assets\/[^"]*"[^>]*>/gi, '') // Remove relative asset images
+          .replace(/<img[^>]*src="assets\/[^"]*"[^>]*>/gi, '') // Remove relative asset images without leading slash
+          .replace(/<img[^>]*src="[^"]*logo[^"]*"[^>]*>/gi, '') // Remove logo images
+          .replace(/<img[^>]*data-src="[^"]*"[^>]*>/gi, '') // Remove lazy loaded images
+          .replace(/<picture[^>]*>[\s\S]*?<\/picture>/gi, '') // Remove picture elements
+          .replace(/<source[^>]*>/gi, ''); // Remove source elements
+      },
     },
     onBlur: ({ editor }) => {
       const html = editor.getHTML();
