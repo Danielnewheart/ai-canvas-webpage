@@ -54,8 +54,8 @@
   - [x] 4.5 Add an "Add to Canvas" button in the `WebPreviewPanel.tsx` that creates a corresponding `WebCard.tsx` on the main canvas (FR3.3).
   - [x] 4.6 Implement the logic for a click on a `WebCard.tsx` to open its link in the `WebPreviewPanel.tsx` (FR3.4).
 
-- [ ] 5.0 **Connecting the Core Loop**
+- [x] 5.0 **Connecting the Core Loop**
   - [x] 5.1 Implement a context menu triggered by "@" that allows searching and selecting cards on the canvas based on keywords.
   - [x] 5.2 Modify the AI chat submission logic to parse "@" mentions in the message, search for matching cards, and include their content as context in the API request to the backend (FR2.6).
   - [x] 5.3 Update the `/api/chat` backend endpoint to accept and process the additional context from canvas cards.
-  - [ ] 5.4 Conduct an end-to-end test of the primary user flow: Ask -> Get cited response -> Open source in preview -> Add source to canvas -> Reference card with "@" -> Ask a new question with card context.
+  - [x] 5.4 Conduct an end-to-end test of the primary user flow: Ask -> Get cited response -> Open source in preview -> Add source to canvas -> Reference card with "@" -> Ask a new question with card context.

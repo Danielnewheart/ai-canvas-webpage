@@ -1,5 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
+import * as cheerio from 'cheerio';
 
 // Remove edge runtime for now to fix deployment issues
 // export const runtime = 'edge';
@@ -151,6 +152,43 @@ export async function POST(req: Request) {
     const hasCanvasContext = processedMessages.some((msg: ProcessedMessage) => msg.canvasCards?.length && msg.canvasCards.length > 0);
     const canvasCards = processedMessages.find((msg: ProcessedMessage) => msg.canvasCards)?.canvasCards || [];
     
+    // If there are canvas cards, fetch full content for any web cards
+    if (hasCanvasContext && canvasCards.length > 0) {
+      console.log('Fetching content for web cards...');
+      for (const card of canvasCards) {
+        if (card.url) { // Heuristic to identify web cards
+          try {
+            console.log(`Fetching ${card.url}...`);
+            const response = await fetch(card.url, {
+              headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' }
+            });
+            if (response.ok) {
+              const html = await response.text();
+              const $ = cheerio.load(html);
+              
+              // Remove script, style, nav, header, footer tags for cleaner content
+              $('script, style, nav, header, footer, aside').remove();
+              
+              const mainContent = $('body').text();
+              
+              // Clean up whitespace and limit content size
+              const cleanedContent = mainContent.replace(/\s\s+/g, ' ').trim();
+              card.content = cleanedContent.substring(0, 8000); // Limit to ~8k characters
+              
+              console.log(`Successfully fetched and processed content for ${card.title}. Content length: ${card.content.length}`);
+            } else {
+              console.warn(`Failed to fetch ${card.url}. Status: ${response.status}`);
+              card.content = `[Could not fetch content from URL: ${card.url}]`;
+            }
+          } catch (error) {
+            console.error(`Error fetching or parsing ${card.url}:`, error);
+            card.content = `[Error fetching content from URL: ${card.url}]`;
+          }
+        }
+      }
+      console.log('Finished fetching web card content.');
+    }
+
     // Get the latest user query for search analysis
     const latestUserMessage = processedMessages.filter((msg: ProcessedMessage) => msg.role === 'user').pop();
     const userQuery = latestUserMessage?.content || '';
