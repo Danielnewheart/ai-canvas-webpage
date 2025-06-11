@@ -41,22 +41,65 @@ export default function WebPreviewPanel({
     }
   }, [url]);
 
-  const fetchContent = useCallback(async (fetchUrl: string) => {
+  const fetchContent = useCallback(async (fetchUrl: string, retryCount = 0) => {
+    const maxRetries = 2;
+    
     setIsLoading(true);
     setHasError(false);
     setContent('');
+    
     try {
       const apiUrl = `${window.location.origin}/api/browse?url=${encodeURIComponent(fetchUrl)}`;
-      const response = await fetch(apiUrl);
+      
+      // Add a small delay for subsequent retries to avoid overwhelming the server
+      if (retryCount > 0) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+      }
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000); // 35 second timeout
+      
+      const response = await fetch(apiUrl, {
+        signal: controller.signal,
+        headers: {
+          'Cache-Control': 'no-cache',
+        }
+      });
+      
+      clearTimeout(timeoutId);
+      
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ details: `HTTP ${response.status}` }));
         throw new Error(errorData.details || `HTTP error! status: ${response.status}`);
       }
+      
       const html = await response.text();
       setContent(html);
+      
     } catch (error) {
+      console.error(`Fetch attempt ${retryCount + 1} failed for ${fetchUrl}:`, error);
+      
+      // If it's an abort error and we haven't exceeded retries, try again
+      if ((error instanceof Error && error.name === 'AbortError') || 
+          (error instanceof Error && error.message.includes('net::ERR_ABORTED')) ||
+          (error instanceof Error && error.message.includes('Navigating frame was detached'))) {
+        
+        if (retryCount < maxRetries) {
+          console.log(`Retrying request for ${fetchUrl} (attempt ${retryCount + 2}/${maxRetries + 1})`);
+          // Retry after a short delay
+          setTimeout(() => {
+            fetchContent(fetchUrl, retryCount + 1);
+          }, 500 * (retryCount + 1));
+          return;
+        }
+      }
+      
       setHasError(true);
-      setErrorMessage(error instanceof Error ? error.message : 'An unknown error occurred.');
+      const errorMsg = error instanceof Error ? error.message : 'An unknown error occurred.';
+      setErrorMessage(retryCount >= maxRetries ? 
+        `Failed after ${maxRetries + 1} attempts: ${errorMsg}` : 
+        errorMsg
+      );
     } finally {
       setIsLoading(false);
     }

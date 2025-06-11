@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 // Use Node.js runtime for server-side HTTP requests and HTML parsing
@@ -14,6 +13,19 @@ interface UrlMetadata {
   type?: string;
 }
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -24,7 +36,7 @@ export async function GET(req: Request) {
         JSON.stringify({ error: 'URL parameter is required' }),
         { 
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
         }
       );
     }
@@ -38,7 +50,7 @@ export async function GET(req: Request) {
         JSON.stringify({ error: 'Invalid URL format' }),
         { 
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
         }
       );
     }
@@ -49,7 +61,7 @@ export async function GET(req: Request) {
         JSON.stringify({ error: 'Only HTTP and HTTPS URLs are supported' }),
         { 
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
         }
       );
     }
@@ -60,17 +72,25 @@ export async function GET(req: Request) {
 
     try {
       // Fetch the webpage with timeout and user agent
-      const response = await axios.get(validUrl.toString(), {
-        timeout: 10000, // 10 second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      const response = await fetch(validUrl.toString(), {
+        signal: controller.signal,
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; UrlMetadataBot/1.0)',
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         },
-        maxRedirects: 3,
-        validateStatus: (status) => status < 400, // Accept 2xx and 3xx status codes
       });
 
-      const html = response.data;
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        // If response is not ok, we still try to return basic metadata
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const html = await response.text();
       const $ = cheerio.load(html);
 
       // Extract title
@@ -147,6 +167,7 @@ export async function GET(req: Request) {
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400', // Cache for 1 hour
+          ...CORS_HEADERS
         }
       }
     );
@@ -157,7 +178,7 @@ export async function GET(req: Request) {
       JSON.stringify({ error: 'Internal server error' }),
       { 
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
       }
     );
   }
@@ -172,7 +193,7 @@ export async function POST(req: Request) {
         JSON.stringify({ error: 'URL is required in request body' }),
         { 
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
         }
       );
     }
@@ -188,7 +209,7 @@ export async function POST(req: Request) {
       JSON.stringify(data),
       { 
         status: response.status,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
       }
     );
 
@@ -198,7 +219,7 @@ export async function POST(req: Request) {
       JSON.stringify({ error: 'Internal server error' }),
       { 
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json', ...CORS_HEADERS }
       }
     );
   }

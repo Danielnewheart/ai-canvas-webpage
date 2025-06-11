@@ -69,17 +69,23 @@ export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }
         }
       }
       
-      // Regular link handling
+      // Regular link handling - open in WebPreviewPanel instead of new tab
       return (
-        <a 
-          href={href} 
-          className="text-blue-300 hover:text-blue-200 underline"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            if (href && onCitationClick) {
+              // Extract title from link text, or use URL as fallback
+              const linkTitle = typeof children === 'string' ? children : (Array.isArray(children) ? children.join('') : href);
+              onCitationClick(href, linkTitle);
+            }
+          }}
+          className="text-blue-300 hover:text-blue-200 underline cursor-pointer"
+          title={`Open ${href} in preview panel`}
           {...props}
         >
           {children}
-        </a>
+        </button>
       );
     }
   });
