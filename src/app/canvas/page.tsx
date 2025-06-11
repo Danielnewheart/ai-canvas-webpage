@@ -57,8 +57,8 @@ export default function CanvasPage() {
     if (addWebCardToCanvas) {
       try {
         await addWebCardToCanvas(url);
-        // Optionally close the preview after adding to canvas
-        handleFullClosePreview();
+        // Minimize the preview instead of fully closing it
+        handleClosePreview();
       } catch (error) {
         console.error('Failed to add web card to canvas:', error);
       }
@@ -159,8 +159,6 @@ export default function CanvasPage() {
         </Resizable>
       )}
 
-
-
       {/* Web Preview Panel */}
       {showPreview && !isPreviewMinimized && (
         <Resizable
@@ -187,6 +185,7 @@ export default function CanvasPage() {
             url={previewUrl}
             title={previewTitle}
             onClose={handleClosePreview}
+            onMinimize={handleClosePreview}
             onAddToCanvas={handleAddToCanvas}
           />
         </Resizable>

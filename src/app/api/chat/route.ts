@@ -24,7 +24,9 @@ function needsWebSearch(query: string): boolean {
     'latest', 'news', 'current', 'today', 'recent', 'trending', 'now',
     '價格', '股價', '匯率', '市場', 'price', 'stock', 'market',
     '評價', '比較', '推薦', 'review', 'comparison', 'recommend',
-    '怎麼', '如何', '方法', 'how to', 'tutorial', 'guide'
+    '怎麼', '如何', '方法', 'how to', 'tutorial', 'guide', '網路',
+    'web', '網站', 'website', 'internet', '網頁', 'page', 'pages', 'pages',
+    'search', '搜尋', '整理', 'curated', 'curation', 'curated', 'curated',
   ];
   
   return searchKeywords.some(keyword => 
@@ -49,10 +51,11 @@ const getSystemPrompt = (hasCanvasContext: boolean, canvasCards: CanvasCard[], u
 
 **WEB SEARCH STRATEGY:**
 1. **Always Search First**: For ANY question that could benefit from current information, search the web before responding
-2. **Multiple Sources**: Aim to find and cite at least 2-3 credible sources per topic
-3. **Source Quality**: Prioritize authoritative sources (official websites, reputable news outlets, academic sources)
-4. **Recency Check**: Always look for the most recent information available
-5. **Fact Verification**: Cross-reference information across multiple sources
+2. **Always Search in English**: No matter what language the user's query is in, search the web in English for the most accurate and relevant information
+3. **Multiple Sources**: Aim to find and cite at least 2-3 credible sources per topic
+4. **Source Quality**: Prioritize authoritative sources (official websites, reputable news outlets, academic sources)
+5. **Recency Check**: Always look for the most recent information available
+6. **Fact Verification**: Cross-reference information across multiple sources
 
 **DETAILED RESPONSE STRUCTURE:**
 1. **Opening Summary**: Brief context-setting paragraph

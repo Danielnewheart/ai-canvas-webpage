@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ExternalLink, Search, Loader2, X } from 'lucide-react';
+import { ExternalLink, Search, Loader2, X, Trash2 } from 'lucide-react';
 
 interface CanvasCard {
   id: string;
@@ -30,7 +30,7 @@ export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }
   const [originalUserMessage, setOriginalUserMessage] = useState<string>('');
   const [lastMessageWithContext, setLastMessageWithContext] = useState<string>('');
   
-  const { messages, input, handleInputChange, handleSubmit, append, isLoading } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, append, isLoading, setMessages } = useChat({
     onFinish: () => {
       // Clear confirmed mentions after AI response
       setConfirmedMentions(new Set());
@@ -323,7 +323,19 @@ export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }
 
    // Handle all keyboard interactions
    const handleKeyDownWithMentionDeletion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // First, handle mention dropdown navigation if dropdown is open
+    // First, handle cmd/ctrl+Enter to submit the form
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      // Trigger form submission
+      const form = inputRef.current?.closest('form');
+      if (form) {
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        form.dispatchEvent(submitEvent);
+      }
+      return;
+    }
+
+    // Second, handle mention dropdown navigation if dropdown is open
     if (showMentions && filteredCards.length > 0) {
       switch (e.key) {
         case 'ArrowDown':
@@ -392,20 +404,39 @@ export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }
     }
   };
 
+  // Clear conversation function
+  const handleClearConversation = () => {
+    setMessages([]);
+    setOriginalUserMessage('');
+    setLastMessageWithContext('');
+    setConfirmedMentions(new Set());
+  };
+
   return (
     <div className="flex flex-col h-full bg-gray-800 text-white rounded-lg shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-700 flex-shrink-0">
         <h3 className="text-lg font-semibold">AI Chat</h3>
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-700 rounded-md transition-colors"
-            title="Minimize Chat"
-          >
-            <X size={20} />
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {messages.length > 0 && (
+            <button
+              onClick={handleClearConversation}
+              className="p-1 hover:bg-gray-700 rounded-md transition-colors"
+              title="Clear Conversation"
+            >
+              <Trash2 size={20} />
+            </button>
+          )}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="p-1 hover:bg-gray-700 rounded-md transition-colors"
+              title="Minimize Chat"
+            >
+              <X size={20} />
+            </button>
+          )}
+        </div>
       </div>
       
       <div className="flex-1 p-4 overflow-y-auto">
@@ -536,7 +567,7 @@ export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }
             value={input}
                 onChange={handleInputChangeWithMentions}
                 onKeyDown={handleKeyDownWithMentionDeletion}
-                placeholder="Type a message... Use @ to mention cards"
+                placeholder="Type a message... Use @ to mention cards, Cmd/Ctrl+Enter to send"
                 className="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-transparent caret-white resize-none font-mono"
                 style={{
                   minHeight: '40px',
