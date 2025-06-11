@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ExternalLink, Search, Loader2 } from 'lucide-react';
+import { ExternalLink, Search, Loader2, X } from 'lucide-react';
 
 interface CanvasCard {
   id: string;
@@ -17,6 +17,7 @@ interface CanvasCard {
 interface ChatPanelProps {
   onCitationClick?: (url: string, title?: string) => void;
   canvasCards?: CanvasCard[];
+  onClose?: () => void;
 }
 
 interface Citation {
@@ -25,7 +26,7 @@ interface Citation {
   index: number;
 }
 
-export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPanelProps) {
+export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }: ChatPanelProps) {
   const [originalUserMessage, setOriginalUserMessage] = useState<string>('');
   const [lastMessageWithContext, setLastMessageWithContext] = useState<string>('');
   
@@ -387,6 +388,20 @@ export default function ChatPanel({ onCitationClick, canvasCards = [] }: ChatPan
 
   return (
     <div className="flex flex-col h-full bg-gray-800 text-white rounded-lg shadow-lg">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-700 flex-shrink-0">
+        <h3 className="text-lg font-semibold">AI Chat</h3>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-gray-700 rounded-md transition-colors"
+            title="Minimize Chat"
+          >
+            <X size={20} />
+          </button>
+        )}
+      </div>
+      
       <div className="flex-1 p-4 overflow-y-auto">
                  {messages.map((m) => {
             const citations = m.role === 'assistant' ? extractCitations(m.content) : [];
