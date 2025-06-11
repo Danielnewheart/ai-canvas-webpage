@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Canvas, { CanvasCard } from '@/components/canvas/Canvas';
 import ChatPanel from '@/components/ui/ChatPanel';
 import WebPreviewPanel from '@/components/ui/WebPreviewPanel';
@@ -8,7 +9,10 @@ import { ReactFlowProvider } from 'reactflow';
 import { Resizable } from 're-resizable';
 import { ExternalLink, X, MessageSquare } from 'lucide-react';
 
-export default function CanvasPage() {
+function CanvasPageContent() {
+  const searchParams = useSearchParams();
+  const initialMessage = searchParams.get('message');
+  
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [previewTitle, setPreviewTitle] = useState<string>('');
   const [showPreview, setShowPreview] = useState(false);
@@ -17,6 +21,14 @@ export default function CanvasPage() {
   const [isChatMinimized, setIsChatMinimized] = useState(false);
   const [addWebCardToCanvas, setAddWebCardToCanvas] = useState<((url: string) => Promise<void>) | null>(null);
   const [canvasCards, setCanvasCards] = useState<CanvasCard[]>([]);
+  const [shouldAutoSendMessage, setShouldAutoSendMessage] = useState(false);
+
+  // Handle initial message from URL parameter
+  useEffect(() => {
+    if (initialMessage && initialMessage.trim()) {
+      setShouldAutoSendMessage(true);
+    }
+  }, [initialMessage]);
 
   const handleCitationClick = (url: string, title?: string) => {
     setPreviewUrl(url);
@@ -51,6 +63,10 @@ export default function CanvasPage() {
   const handleFullCloseChatPanel = () => {
     setShowChatPanel(false);
     setIsChatMinimized(false);
+  };
+
+  const handleAutoSendComplete = () => {
+    setShouldAutoSendMessage(false);
   };
 
   const handleAddToCanvas = async (url: string) => {
@@ -155,6 +171,9 @@ export default function CanvasPage() {
             onCitationClick={handleCitationClick}
             canvasCards={canvasCards}
             onClose={handleCloseChatPanel}
+            initialMessage={initialMessage || ''}
+            shouldAutoSend={shouldAutoSendMessage}
+            onAutoSendComplete={handleAutoSendComplete}
           />
         </Resizable>
       )}
@@ -191,5 +210,13 @@ export default function CanvasPage() {
         </Resizable>
       )}
     </div>
+  );
+}
+
+export default function CanvasPage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <CanvasPageContent />
+    </Suspense>
   );
 } 

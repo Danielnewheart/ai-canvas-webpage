@@ -10,8 +10,9 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (message.trim()) {
-      // For now, just navigate. Later, this will also pass the message.
-      router.push('/canvas');
+      // Pass the message as URL parameter to canvas page
+      const encodedMessage = encodeURIComponent(message);
+      router.push(`/canvas?message=${encodedMessage}`);
     }
   };
 

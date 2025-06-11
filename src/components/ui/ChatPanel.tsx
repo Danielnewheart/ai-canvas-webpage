@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -18,6 +18,9 @@ interface ChatPanelProps {
   onCitationClick?: (url: string, title?: string) => void;
   canvasCards?: CanvasCard[];
   onClose?: () => void;
+  initialMessage?: string;
+  shouldAutoSend?: boolean;
+  onAutoSendComplete?: () => void;
 }
 
 interface Citation {
@@ -26,7 +29,14 @@ interface Citation {
   index: number;
 }
 
-export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }: ChatPanelProps) {
+export default function ChatPanel({ 
+  onCitationClick, 
+  canvasCards = [], 
+  onClose, 
+  initialMessage, 
+  shouldAutoSend = false, 
+  onAutoSendComplete 
+}: ChatPanelProps) {
   const [originalUserMessage, setOriginalUserMessage] = useState<string>('');
   const [lastMessageWithContext, setLastMessageWithContext] = useState<string>('');
   
@@ -44,6 +54,32 @@ export default function ChatPanel({ onCitationClick, canvasCards = [], onClose }
   const [selectedMentionIndex, setSelectedMentionIndex] = useState(0);
   const [confirmedMentions, setConfirmedMentions] = useState<Set<string>>(new Set());
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const hasAutoSentRef = useRef<boolean>(false);
+  const lastInitialMessageRef = useRef<string>('');
+
+  // Handle auto-sending initial message
+  useEffect(() => {
+    // Reset hasAutoSentRef if we have a new message
+    if (initialMessage !== lastInitialMessageRef.current) {
+      hasAutoSentRef.current = false;
+      lastInitialMessageRef.current = initialMessage || '';
+    }
+    
+    if (shouldAutoSend && initialMessage && initialMessage.trim() && !hasAutoSentRef.current) {
+      hasAutoSentRef.current = true;
+      
+      // Auto-submit the message directly
+      append({
+        role: 'user',
+        content: initialMessage,
+      }).then(() => {
+        // Notify parent that auto-send is complete
+        onAutoSendComplete?.();
+      }).catch((error) => {
+        console.error('Auto-send failed:', error);
+      });
+    }
+  }, [shouldAutoSend, initialMessage, append, onAutoSendComplete]);
 
   // Custom renderer for markdown links to handle citations
   const createCustomRenderers = (citations: Citation[]) => ({
