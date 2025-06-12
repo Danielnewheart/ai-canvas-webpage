@@ -143,7 +143,7 @@ export default function Canvas({ onWebCardClick, onCanvasReady, onCardsChange }:
     async (url: string, position: { x: number; y: number }) => {
       try {
         console.log('Creating web card for URL:', url);
-        const apiUrl = `/api/metadata?url=${encodeURIComponent(url)}`;
+        const apiUrl = `${window.location.origin}/api/metadata?url=${encodeURIComponent(url)}`;
         console.log('Fetching metadata from:', apiUrl);
         
         const response = await fetch(apiUrl);

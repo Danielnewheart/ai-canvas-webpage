@@ -43,6 +43,10 @@ export default function ChatPanel({
   const [lastMessageWithContext, setLastMessageWithContext] = useState<string>('');
   
   const { messages, input, handleInputChange, handleSubmit, append, isLoading, setMessages } = useChat({
+    onError: (error) => {
+      console.error('Chat API Error:', error);
+      alert(`An error occurred: ${error.message}. Please check the server logs for more details.`);
+    },
     onFinish: () => {
       // Clear confirmed mentions after AI response
       setConfirmedMentions(new Set());
